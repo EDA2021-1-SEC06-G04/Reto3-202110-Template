@@ -44,7 +44,6 @@ def newCatalog():
     Retorna el catálogo inicializado.
     """
     catalog = {'caracteristica_eventos': None,
-                '': None
                 }
 
     catalog['caracteristica_eventos'] = om.newMap(omaptype='RBT',
