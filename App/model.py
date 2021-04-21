@@ -38,7 +38,19 @@ los mismos.
 """
 
 # Construccion de modelos
+def newCatalog():
+    """ Inicializa el catálogo
 
+    Retorna el catálogo inicializado.
+    """
+    catalog = {'caracteristica_eventos': None,
+                '': None
+                }
+
+    catalog['caracteristica_eventos'] = om.newMap(omaptype='RBT',
+                                      comparefunction=compareDates)
+    return catalog
+    
 # Funciones para agregar informacion al catalogo
 
 # Funciones para creacion de datos
