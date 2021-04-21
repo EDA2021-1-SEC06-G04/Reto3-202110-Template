@@ -43,19 +43,32 @@ def newCatalog():
 
     Retorna el catálogo inicializado.
     """
-    catalog = {'caracteristica_eventos': None,
+    catalog = {'RepsPorInstrumentalness': None,
                 }
 
-    catalog['caracteristica_eventos'] = om.newMap(omaptype='RBT',
-                                      comparefunction=compareDates)
+    catalog['RepsPorInstrumentalness'] = om.newMap(omaptype='RBT',
+                                      comparefunction=MAPcompareDecimals)
     return catalog
     
 # Funciones para agregar informacion al catalogo
+
+def addRep(catalog, reproduccion):
+    
 
 # Funciones para creacion de datos
 
 # Funciones de consulta
 
 # Funciones utilizadas para comparar elementos dentro de una lista
+
+def MAPcompareDecimals(keyname, category):
+    keyname = keyname
+    cat_entry = me.getKey(category)
+    if (keyname == cat_entry):
+        return 0
+    elif (keyname > cat_entry):
+        return 1
+    else:
+        return -1
 
 # Funciones de ordenamiento
