@@ -33,6 +33,11 @@ Presenta el menu de opciones y por cada seleccion
 se hace la solicitud al controlador para ejecutar la
 operación solicitada
 """
+
+contextContentFeatures_file = 'context_content_features-small.csv'
+usertrackhashtagtimestamp_file = 'user_track_hashtag_timestamp-small.csv'
+sentimentvalues_file = 'sentiment_values.csv'
+
 def initCatalog():
     """
     Inicializa el Catálogo
@@ -60,11 +65,12 @@ while True:
     inputs = input('Seleccione una opción para continuar\n')
     if int(inputs[0]) == 1:
         print("Inicializando catálogo ....")
-        initCatalog()
-        
+        cont = initCatalog()
+
 
     elif int(inputs[0]) == 2:
-        pass
+        print("Cargando información del catálogo ....")
+        controller.loadData(cont, contextContentFeatures_file)
 
     else:
         sys.exit(0)
