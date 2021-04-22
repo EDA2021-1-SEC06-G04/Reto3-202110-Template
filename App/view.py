@@ -55,7 +55,7 @@ def printMenu():
     pritn("5- Encontrar música para estudiar")
     print("6- Estudiar los géneros musicales")
 
-catalog = None
+cont = None
 
 """
 Menu principal
@@ -70,7 +70,17 @@ while True:
 
     elif int(inputs[0]) == 2:
         print("Cargando información del catálogo ....")
-        controller.loadData(cont, contextContentFeatures_file)
+        cantidad_total_reps = controller.loadData(cont)
+
+    elif int(inputs[0]) == 3:
+        print(" ....")
+        caracteristica = input('Que caracteristica de contenido desea:\n')
+
+        altura = om.height(catalogo['RepsPor_{}'.format(caracteristica)])
+        elementos = om.size(catalogo['RepsPor_{}'.format(caracteristica)])
+        print(elementos)
+        print(altura)
+
 
     else:
         sys.exit(0)
