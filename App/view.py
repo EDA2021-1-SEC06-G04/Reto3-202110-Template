@@ -67,11 +67,10 @@ while True:
         print("Inicializando catálogo ....")
         cont = initCatalog()
 
-
     elif int(inputs[0]) == 2:
         print("Cargando información del catálogo ....")
         controller.loadData(cont, contextContentFeatures_file)
-
+        
     else:
         sys.exit(0)
 sys.exit(0)
