@@ -65,8 +65,7 @@ def loadContextContent(catalog):
         for info in info_deseada_ids:
             rep_agregar[info] = str(rep_leida[info])
         for info in info_numerica:
-            rep_agregar[info] = float(rep_leido[info])
-        
+            rep_agregar[info] = float(rep_leida[info])
         
 
     #    rep_agregar['created_at'] = datetime.strptime(rep_leida['created_at'], '%y.%d.%m').date()

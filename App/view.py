@@ -24,6 +24,8 @@ import config as cf
 import sys
 import controller
 from DISClib.ADT import list as lt
+from DISClib.ADT import orderedmap as om
+from DISClib.ADT import map as mp
 assert cf
 
 
@@ -52,7 +54,7 @@ def printMenu():
     print("2- Cargar información en el catálogo")
     print("3- Consultar cuántas reproducciones están en el sistema de recomendación basado en una característica de contenido y un rango determinado")
     print("4- Encontrar música para festejar")
-    pritn("5- Encontrar música para estudiar")
+    print("5- Encontrar música para estudiar")
     print("6- Estudiar los géneros musicales")
 
 cont = None
@@ -69,21 +71,22 @@ while True:
 
     elif int(inputs[0]) == 2:
         print("Cargando información del catálogo ....")
-        controller.loadData(cont, contextContentFeatures_file)
+        controller.loadData(cont)
         
         cantidad_total_reps = controller.loadData(cont)
-        cantidad_artistas_unicos = om.size(catalog['Artistas_Unicos'])
-        cantidad_pistas_unicas = om.size(catalog['Pistas_Unicas'])
-
+        cantidad_artistas_unicos = lt.size(mp.keySet(cont['Artistas_Unicos']))
+        cantidad_pistas_unicas = lt.size((mp.keySet(cont['Pistas_Unicas'])))
+        print("El total de registros de eventos de escucha cargados fue de: "+ str(cantidad_total_reps))
+        print("El total de artistas únicos cargados fue de: " + str(cantidad_artistas_unicos))
+        print("El total de pistas de audio únicas cargadas fue de: "+ str(cantidad_pistas_unicas))
 
     elif int(inputs[0]) == 3:
-        print(" ....")
-        caracteristica = input('Que caracteristica de contenido desea:\n')
-
-        altura = om.height(catalogo['RepsPor_{}'.format(caracteristica)])
-        elementos = om.size(catalogo['RepsPor_{}'.format(caracteristica)])
-        print(elementos)
-        print(altura)
+        print("OPCIÓN 3:")
+        caracteristica = input('¿Para cuál característica de contenido desea obtener información?\n')
+        altura = om.height(cont['RepsPor_{}'.format(caracteristica)])
+        elementos = om.size(cont['RepsPor_{}'.format(caracteristica)])
+        print("Cantidad de elementos en el árbol: "+str(elementos))
+        print("Altura del arbol: " + str(altura))
 
 
     else:

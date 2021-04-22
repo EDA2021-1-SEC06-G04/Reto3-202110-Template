@@ -99,10 +99,10 @@ def carga_req1(catalog, rep):
 
 
 def addRep_a_mapaReq1(catalog, caracteristica, rep):
-    mapa = catalogo['RepsPor_{}'.format(caracteristica)]
+    mapa = catalog['RepsPor_{}'.format(caracteristica)]
     llave = rep[caracteristica]
     if not om.contains(mapa, llave):
-        nueva_lista = lt.newList('ARRAY_LIST')
+        nueva_lista = lt.newList(datastructure='ARRAY_LIST')
         lt.addLast(nueva_lista, {'id': rep['id'], 'artist_id': rep['artist_id']})
         om.put(mapa, llave, nueva_lista)
     else:
@@ -120,8 +120,8 @@ def addRep_a_mapaReq1(catalog, caracteristica, rep):
 # Funciones utilizadas para comparar elementos dentro de una lista
 
 def MAPcompareDecimals(keyname, category):
-    keyname = keyname
-    cat_entry = me.getKey(category)
+    keyname = float(keyname)
+    cat_entry = float(category)
     if (keyname == cat_entry):
         return 0
     elif (keyname > cat_entry):
