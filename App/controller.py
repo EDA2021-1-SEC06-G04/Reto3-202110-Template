@@ -24,7 +24,9 @@ import config as cf
 import model
 import csv
 
-
+contextContentFeatures_file = 'context_content_features-small.csv'
+usertrackhashtagtimestamp_file = 'user_track_hashtag_timestamp-small.csv'
+sentimentvalues_file = 'sentiment_values.csv'
 """
 El controlador se encarga de mediar entre la vista y el modelo.
 """
@@ -38,23 +40,30 @@ def loadData(catalog):
 
     #---------------------------------------------------------------------
     loadSentimentValues(catalog)
-    loadContextContent(catalog)
+    total_reps = loadContextContent(catalog)
     loadUserTrackHashtag(catalog)
     #---------------------------------------------------------------------
+    return total_reps
+
+
+
 def loadSentimentValues(catalog):
     return None
 
+def loadUserTrackHashtag(catalog):
+    return None
+
 def loadContextContent(catalog):
-    file = cf.data_dir + 'videos-large.csv'
+    file = cf.data_dir + contextContentFeatures_file
     input_file = csv.DictReader(open(file, encoding='utf-8'))
-#    contador_datos = 0
+    contador_datos = 0
     for rep_leida in input_file:
         rep_agregar = {}
         info_numerica = ['instrumentalness','liveness', 'speechiness', 'danceability', \
              'valence', 'loudness', 'tempo', 'acousticness', 'energy']
-        info_deseada_ids = ['artist_id', 'track_id', 'artist_id', 'id']
+        info_deseada_ids = ['artist_id', 'track_id', 'user_id', 'id']
         for info in info_deseada_ids:
-            rep_agregar[info] = int(rep_leida[info])
+            rep_agregar[info] = str(rep_leida[info])
         for info in info_numerica:
             rep_agregar[info] = float(rep_leido[info])
         
@@ -68,9 +77,10 @@ def loadContextContent(catalog):
     #        lt.addLast(rep_agregar['tags'], tag)
 
         model.addRep(catalog, rep_agregar)
-#        contador_datos += 1
+        contador_datos += 1
 #        if contador_datos >= size_datos:
 #            break
+    return contador_datos
 
 # Funciones de ordenamiento
 

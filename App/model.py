@@ -46,7 +46,7 @@ def newCatalog():
     """
     catalog = {'RepsPorInstrumentalness': None,
                 }
-
+    
     #-----------------------------------------------------------------------------------------------------------
     #-----------------------------------------------------------------------------------------------------------
     #Carga:
@@ -84,12 +84,12 @@ def addRep(catalog, reproduccion):
 def guardar_artista_unico(catalog, rep):
     mapa = catalog['Artistas_Unicos']
     artista = rep['artist_id']
-    om.put(mapa, artista, artista)
+    mp.put(mapa, artista, artista)
 
 def guardar_pista_unica(catalog, rep):
     mapa = catalog['Pistas_Unicas']
     track = rep['track_id']
-    om.put(mapa, track, track)
+    mp.put(mapa, track, track)
 
 def carga_req1(catalog, rep):
     caracteristicas = ['instrumentalness','liveness', 'speechiness', 'danceability', \
@@ -108,6 +108,7 @@ def addRep_a_mapaReq1(catalog, caracteristica, rep):
     else:
         lista_existente = me.getValue(om.get(mapa, llave))
         lt.addLast(lista_existente, {'id': rep['id'], 'artist_id': rep['artist_id']})
+
 
 
 # Funciones para creacion de datos
