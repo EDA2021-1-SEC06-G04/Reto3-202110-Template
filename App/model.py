@@ -28,6 +28,7 @@
 import config as cf
 from DISClib.ADT import list as lt
 from DISClib.ADT import map as mp
+from DISClib.ADT import orderedmap as om
 from DISClib.DataStructures import mapentry as me
 from DISClib.Algorithms.Sorting import shellsort as sa
 assert cf
@@ -45,17 +46,55 @@ def newCatalog():
     """
     catalog = {'RepsPorInstrumentalness': None,
                 }
-
-    catalog['RepsPorInstrumentalness'] = om.newMap(omaptype='RBT',
+    #-----------------------------------------------------------------------------------------------------------
+    #-----------------------------------------------------------------------------------------------------------
+    #Req1:
+    
+    catalog['RepsPor_instrumentalness'] = om.newMap(omaptype='RBT',
                                       comparefunction=MAPcompareDecimals)
+    catalog['RepsPor_liveness'] = om.newMap(omaptype='RBT',
+                                      comparefunction=MAPcompareDecimals)
+    catalog['RepsPor_speechiness'] = om.newMap(omaptype='RBT',
+                                      comparefunction=MAPcompareDecimals)
+    catalog['RepsPor_energy'] = om.newMap(omaptype='RBT',
+                                      comparefunction=MAPcompareDecimals)
+    catalog['RepsPor_acousticness'] = om.newMap(omaptype='RBT',
+                                      comparefunction=MAPcompareDecimals)
+    catalog['RepsPor_danceability'] = om.newMap(omaptype='RBT',
+                                      comparefunction=MAPcompareDecimals)
+    catalog['RepsPor_valence'] = om.newMap(omaptype='RBT',
+                                      comparefunction=MAPcompareDecimals)
+    #-----------------------------------------------------------------------------------------------------------
+    #-----------------------------------------------------------------------------------------------------------
     return catalog
     
 # Funciones para agregar informacion al catalogo
 
 def addRep(catalog, reproduccion):
-    
+    carga_req1(catalog, reproduccion)
+
+def carga_req1(catalog, rep):
+    caracteristicas = ['instrumentalness','liveness', 'speechiness', 'danceability', \
+             'valence', 'acousticness', 'energy']
+    for caracteristica in caracteristicas:
+        addRep_a_mapaReq1(catalog, caracteristica, rep)
+
+
+def addRep_a_mapaReq1(catalog, caracteristica, rep):
+    mapa = catalogo['RepsPor_{}'.format(caracteristica)]
+    llave = rep[caracteristica]
+    if not om.contains(mapa, llave):
+        nueva_lista = lt.newList('ARRAY_LIST')
+        lt.addLast(nueva_lista, {'id': rep['id'], 'artist_id': rep['artist_id']})
+        om.put(mapa, llave, nueva_lista)
+    else:
+        lista_existente = me.getValue(om.get(mapa, llave))
+        lt.addLast(lista_existente, {'id': rep['id'], 'artist_id': rep['artist_id']})
+
 
 # Funciones para creacion de datos
+
+
 
 # Funciones de consulta
 
