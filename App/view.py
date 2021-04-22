@@ -71,6 +71,9 @@ while True:
     elif int(inputs[0]) == 2:
         print("Cargando información del catálogo ....")
         cantidad_total_reps = controller.loadData(cont)
+        cantidad_artistas_unicos = om.size(catalog['Artistas_Unicos'])
+        cantidad_pistas_unicas = om.size(catalog['Pistas_Unicas'])
+
 
     elif int(inputs[0]) == 3:
         print(" ....")
