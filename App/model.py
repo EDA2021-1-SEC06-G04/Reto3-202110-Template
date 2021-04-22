@@ -46,6 +46,12 @@ def newCatalog():
     """
     catalog = {'RepsPorInstrumentalness': None,
                 }
+
+    #-----------------------------------------------------------------------------------------------------------
+    #-----------------------------------------------------------------------------------------------------------
+    #Carga:
+    catalog['Artistas_Unicos'] = mp.newMap(loadfactor=4.0)
+    catalog['Pistas_Unicas'] = mp.newMap(loadfactor=4.0)
     #-----------------------------------------------------------------------------------------------------------
     #-----------------------------------------------------------------------------------------------------------
     #Req1:
@@ -72,6 +78,18 @@ def newCatalog():
 
 def addRep(catalog, reproduccion):
     carga_req1(catalog, reproduccion)
+    guardar_artista_unico(catalog, reproduccion)
+    guardar_pista_unica(catalog, reproduccion)
+
+def guardar_artista_unico(catalog, rep):
+    mapa = catalog['Artistas_Unicos']
+    artista = rep['artist_id']
+    om.put(mapa, artista, artista)
+
+def guardar_pista_unica(catalog, rep):
+    mapa = catalog['Pistas_Unicas']
+    track = rep['track_id']
+    om.put(mapa, track, track)
 
 def carga_req1(catalog, rep):
     caracteristicas = ['instrumentalness','liveness', 'speechiness', 'danceability', \
