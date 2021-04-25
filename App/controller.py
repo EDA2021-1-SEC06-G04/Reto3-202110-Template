@@ -26,6 +26,7 @@ import csv
 from DISClib.ADT import list as lt
 from DISClib.ADT import map as mp
 from DISClib.ADT import orderedmap as om
+from DISClib.ADT import stack as stk
 from DISClib.DataStructures import mapentry as me
 
 contextContentFeatures_file = 'context_content_features-small.csv'
@@ -89,15 +90,17 @@ def loadContextContent(catalog):
 
 
 # Funciones de consulta sobre el catálogo
+#REQ1
 def caracterizarReproducciones(catalog, caracteristica, valor_min, valor_max):
     resultado = model.caracterizarReproducciones(catalog, caracteristica, valor_min, valor_max)
     return resultado
-
+#REQ2
 def musicaParaFestejar(catalog, minDance, maxDance, minEnergy, maxEnergy):
     #mapa ordenado : llaves= dance de la rep, valor: reproducciones con ese dance
     mapa_inicial = catalog['RepsPor_danceability']
     #lista de todas las reproducciones cuyo dance está en el rango parametro||||
     # ||||| por esto, de aqui en adelante todo está dentro del rango de Danceability
+    #esto es una lista de las listas de reps por cada valor de danceability
     repsEn_Rango_danceability = model.repsPor_Rango_danceability(mapa_inicial, minDance, maxDance)
     #map/hashtable de PISTAS con id de pista/track_id como llaves, valor: artist_id, danceability, energy
     pistasEn_Rango_danceability = model.ListReps_to_HashPistasUnicas(repsEn_Rango_danceability)
@@ -108,13 +111,14 @@ def musicaParaFestejar(catalog, minDance, maxDance, minEnergy, maxEnergy):
     #se obtienen las que tienen el energy en el rango:
     lista_resultado = model.PistasPor_Rango_energy(Om_pistasEn_Rango_danceability, minEnergy, maxEnergy)
     cantidad = 0
-    retornar = lt.newList(datastructure='ARRAY_LIST')
+    retornar = stk.newStack()
+    # aqui  hay que cambiar para que no coja los primeros cinco sino aleatorios
     for pistasConEnergy in lt.iterator(lista_resultado):
         cantidad = cantidad + lt.size(pistasConEnergy)
-        if lt.size(retornar) < 5:
+        if stk.size(retornar) < 5:
             for track in lt.iterator(pistasConEnergy):
-                if lt.size(retornar) < 5:
-                    lt.addLast(retornar, track)
+                if stk.size(retornar) < 5:
+                    stk.push(retornar, track)
     return cantidad, retornar
     
 

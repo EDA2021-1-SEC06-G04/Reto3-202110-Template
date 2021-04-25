@@ -103,11 +103,19 @@ def addRep_a_mapaReq1(catalog, caracteristica, rep):
     llave = rep[caracteristica]
     if not om.contains(mapa, llave):
         nueva_lista = lt.newList(datastructure='ARRAY_LIST')
-        lt.addLast(nueva_lista, {'id': rep['id'], 'artist_id': rep['artist_id']})
+        agregar = {'id': rep['id'], 'artist_id': rep['artist_id']}
+        if caracteristica=='danceability':
+            agregar = {'id': rep['id'], 'artist_id': rep['artist_id'], 'danceability': rep['danceability']
+            , 'energy': rep['energy'], 'track_id': rep['track_id']}
+        lt.addLast(nueva_lista, agregar)
         om.put(mapa, llave, nueva_lista)
     else:
         lista_existente = me.getValue(om.get(mapa, llave))
-        lt.addLast(lista_existente, {'id': rep['id'], 'artist_id': rep['artist_id']})
+        agregar = {'id': rep['id'], 'artist_id': rep['artist_id']}
+        if caracteristica=='danceability':
+            agregar = {'id': rep['id'], 'artist_id': rep['artist_id'], 'danceability': rep['danceability']
+            , 'energy': rep['energy'], 'track_id': rep['track_id']}
+        lt.addLast(lista_existente, agregar)
 
 
 
@@ -123,14 +131,17 @@ def caracterizarReproducciones(catalog, caracteristica, valor_min, valor_max):
 
 
 def repsPor_Rango_danceability(mapa_ordenado, minDance, maxDance):
+    #esto retorna una lista de las listas de reps por cada valor de danceability
     return om.values(mapa_ordenado, minDance, maxDance)
 
-def ListReps_to_HashPistasUnicas(lista_reps):
+def ListReps_to_HashPistasUnicas(lista_listas_reps):
     hashTable = mp.newMap(maptype='PROBING')
-    for reproduccion in lt.iterator(lista_reps):
-        valor_agregar = {'artist_id': reproduccion['artist_id'], 'energy':reproduccion['energy']
-        , 'danceability': reproduccion['danceability']}
-        mp.put(hashTable, reproduccion['track_id'], valor_agregar)
+    for lista_reps in lt.iterator(lista_listas_reps):
+        for reproduccion in lt.iterator(lista_reps):
+            track_id = reproduccion['track_id']
+            valor_agregar = {'artist_id': reproduccion['artist_id'], 'energy':reproduccion['energy']
+            , 'danceability': reproduccion['danceability'], 'track_id': track_id}
+            mp.put(hashTable, track_id, valor_agregar)
     return hashTable
 
 def ListPistas_to_OMPistas_porEnergy(lista_pistas):

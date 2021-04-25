@@ -26,6 +26,7 @@ import controller
 from DISClib.ADT import list as lt
 from DISClib.ADT import orderedmap as om
 from DISClib.ADT import map as mp
+from DISClib.ADT import stack as stk
 assert cf
 
 
@@ -97,6 +98,27 @@ while True:
 
     elif int(inputs[0])==4:
         print("")
+        minE = float(input('Ingresa el minimo valor de Energy:\n'))
+        minD = float(input('Ingresa el minimo valor de Danceability:\n'))
+        maxE = float(input('Ingresa el maximo valor de Energy:\n'))
+        maxD = float(input('Ingresa el maximo valor de Danceability:\n'))
+        resultado = controller.musicaParaFestejar(catalog, minD, maxD, minE, maxE)
+        cantidad = resultado[0]
+        stack_cinco_tracks = resultado[1]
+        print('-------------------------------------------------------------')
+        print('Buscando pistas con Energy entre {} y {}, y Danceability entre {} y {}:'.format(minE,maxE,minD,maxD))
+        print('Se encontraron {} pistas.'.format(cantidad))
+        print('5 pistas :')
+        for i in range(5):
+            pista = stk.pop(stack_cinco_tracks)
+            tid = pista['track_id']
+            aid = pista['artist_id']
+            d = pista['danceability']
+            e = pista['energy']
+            print('Track ID: {}, Artist ID: {}, Danceability: {}, Energy: {}'.format(tid, aid, d, e))
+
+
+
 
 
     else:
