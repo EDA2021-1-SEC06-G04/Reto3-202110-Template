@@ -116,6 +116,11 @@ def addRep_a_mapaReq1(catalog, caracteristica, rep):
 
 
 # Funciones de consulta
+def caracterizarReproducciones(catalog, caracteristica, valor_min, valor_max):
+    mapa = catalog["RepsPor_{}".format(caracteristica)]
+    contador = 0
+    lista_caracteristica_rango = lt.newList(datastructure='ARRAY_LIST')
+
 
 # Funciones utilizadas para comparar elementos dentro de una lista
 

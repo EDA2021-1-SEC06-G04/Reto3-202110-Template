@@ -83,4 +83,8 @@ def loadContextContent(catalog):
 
 # Funciones de ordenamiento
 
+
 # Funciones de consulta sobre el catálogo
+def caracterizarReproducciones(catalog, caracteristica, valor_min, valor_max):
+    resultado = model.caracterizarReproducciones(catalog, caracteristica, valor_min, valor_max)
+    return resultado

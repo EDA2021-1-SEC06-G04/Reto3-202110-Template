@@ -52,12 +52,12 @@ def printMenu():
     print("Bienvenido")
     print("1- Inicializar catálogo")
     print("2- Cargar información en el catálogo")
-    print("3- Consultar cuántas reproducciones están en el sistema de recomendación basado en una característica de contenido y un rango determinado")
+    print("3- Consultar reproducciones en el sistema de recomendación para una característica y rango")
     print("4- Encontrar música para festejar")
     print("5- Encontrar música para estudiar")
     print("6- Estudiar los géneros musicales")
 
-cont = None
+catalog = None
 
 """
 Menu principal
@@ -67,26 +67,36 @@ while True:
     inputs = input('Seleccione una opción para continuar\n')
     if int(inputs[0]) == 1:
         print("Inicializando catálogo ....")
-        cont = initCatalog()
+        catalog = initCatalog()
 
     elif int(inputs[0]) == 2:
+        print("")
         print("Cargando información del catálogo ....")
-        controller.loadData(cont)
-        
-        cantidad_total_reps = controller.loadData(cont)
-        cantidad_artistas_unicos = lt.size(mp.keySet(cont['Artistas_Unicos']))
-        cantidad_pistas_unicas = lt.size((mp.keySet(cont['Pistas_Unicas'])))
-        print("El total de registros de eventos de escucha cargados fue de: "+ str(cantidad_total_reps))
-        print("El total de artistas únicos cargados fue de: " + str(cantidad_artistas_unicos))
-        print("El total de pistas de audio únicas cargadas fue de: "+ str(cantidad_pistas_unicas))
+        controller.loadData(catalog)
+        cantidad_total_reps = controller.loadData(catalog)
+        cantidad_artistas_unicos = lt.size(mp.keySet(catalog['Artistas_Unicos']))
+        cantidad_pistas_unicas = lt.size((mp.keySet(catalog['Pistas_Unicas'])))
+        print("------------------------------------------------------------")
+        print("Registros de eventos de escucha cargados: "+ str(cantidad_total_reps))
+        print("Artistas únicos cargados: " + str(cantidad_artistas_unicos))
+        print("Pistas de audio únicas cargadas: "+ str(cantidad_pistas_unicas))
+        print("------------------------------------------------------------")
 
     elif int(inputs[0]) == 3:
-        print("OPCIÓN 3:")
+        print("")
         caracteristica = input('¿Para cuál característica de contenido desea obtener información?\n')
-        altura = om.height(cont['RepsPor_{}'.format(caracteristica)])
-        elementos = om.size(cont['RepsPor_{}'.format(caracteristica)])
+        altura = om.height(catalog['RepsPor_{}'.format(caracteristica)])
+        elementos = om.size(catalog['RepsPor_{}'.format(caracteristica)])
+        print("------------------------------------------------------------")
         print("Cantidad de elementos en el árbol: "+str(elementos))
         print("Altura del arbol: " + str(altura))
+        print("------------------------------------------------------------")
+        valor_min = int(input("Escoja valor mínimo para la característica seleccionada: "))
+        valor_max = int(input("Escoja valor máximo para la característica seleccionada: "))
+        resultado = controller.caracterizarReproducciones(catalog, caracteristica, valor_min, valor_max)
+
+    elif int(inputs[0])==4:
+        print("")
 
 
     else:
