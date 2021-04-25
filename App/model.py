@@ -122,6 +122,39 @@ def caracterizarReproducciones(catalog, caracteristica, valor_min, valor_max):
     lista_caracteristica_rango = lt.newList(datastructure='ARRAY_LIST')
 
 
+def repsPor_Rango_danceability(mapa_ordenado, minDance, maxDance):
+    return om.values(mapa_ordenado, minDance, maxDance)
+
+def ListReps_to_HashPistasUnicas(lista_reps):
+    hashTable = mp.newMap(maptype='PROBING')
+    for reproduccion in lt.iterator(lista_reps):
+        valor_agregar = {'artist_id': reproduccion['artist_id'], 'energy':reproduccion['energy']
+        , 'danceability': reproduccion['danceability']}
+        mp.put(hashTable, reproduccion['track_id'], valor_agregar)
+    return hashTable
+
+def ListPistas_to_OMPistas_porEnergy(lista_pistas):
+    #las llaves son valores de energy
+    #los valores NO SON PISTAS, son listas de pistas con ese valor de energy
+    OMpistasPorEnergy = om.newMap(omaptype='RBT', comparefunction=MAPcompareDecimals)
+    for pista in lt.iterator(lista_pistas):
+        llave = pista['energy']
+        if not om.contains(OMpistasPorEnergy, llave):
+            lista_pistas_con_energy = lt.newList(datastructure='ARRAY_LIST')
+            lt.addLast(lista_pistas_con_energy, pista)
+            om.put(OMpistasPorEnergy, llave, lista_pistas_con_energy)
+        else: 
+            lista_pistas_con_energy = me.getValue(om.get(OMpistasPorEnergy, llave))
+            lt.addLast(lista_pistas_con_energy, pista)
+    return OMpistasPorEnergy
+
+def PistasPor_Rango_energy(mapa_ordenado, minEnergy, maxEnergy):
+    return om.values(mapa_ordenado, minEnergy, maxEnergy)
+
+
+
+
+
 # Funciones utilizadas para comparar elementos dentro de una lista
 
 def MAPcompareDecimals(keyname, category):
