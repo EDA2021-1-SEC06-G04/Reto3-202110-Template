@@ -99,10 +99,10 @@ while True:
 
     elif int(inputs[0])==4:
         print("")
-        minE = float(input('Ingresa el minimo valor de Energy:\n'))
-        minD = float(input('Ingresa el minimo valor de Danceability:\n'))
-        maxE = float(input('Ingresa el maximo valor de Energy:\n'))
-        maxD = float(input('Ingresa el maximo valor de Danceability:\n'))
+        minE = float(input('Ingresa el mínimo valor de Energy:\n'))
+        minD = float(input('Ingresa el mínimo valor de Danceability:\n'))
+        maxE = float(input('Ingresa el máximo valor de Energy:\n'))
+        maxD = float(input('Ingresa el máximo valor de Danceability:\n'))
         resultado = controller.musicaParaFestejar(catalog, minD, maxD, minE, maxE)
         cantidad = resultado[0]
         stack_cinco_tracks = resultado[1]
@@ -120,6 +120,12 @@ while True:
 
     elif int(inputs[0])==5:
         print("")
+        minI = float(input('Ingresa el mínimo valor de Instrumentalness:\n'))
+        minT = float(input('Ingresa el mínimo valor de Tempo:\n'))
+        maxI = float(input('Ingresa el máximo valor de Instrumentallness:\n'))
+        maxT = float(input('Ingresa el máximo valor de Tempo:\n'))
+        resultado = controller.musicaParaEstudiar(catalog, minI, maxI, minT, maxT)
+
 
     
 

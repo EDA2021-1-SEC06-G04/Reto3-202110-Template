@@ -134,6 +134,9 @@ def addRep_a_mapaReq1(catalog, caracteristica, rep):
         if caracteristica=='danceability':
             agregar = {'id': rep['id'], 'artist_id': rep['artist_id'], 'danceability': rep['danceability']
             , 'energy': rep['energy'], 'track_id': rep['track_id']}
+        if caracteristica=="instrumentalness":
+            agregar = {'id': rep['id'], 'artist_id': rep['artist_id'], 'instrumentalness': rep['instrumentalness']
+            , 'tempo': rep['tempo'], 'track_id': rep['track_id']}
         lt.addLast(nueva_lista, agregar)
         om.put(mapa, llave, nueva_lista)
     else:
@@ -164,12 +167,16 @@ def carga_req4(catalog, rep, generos_a_correr):
 
 
 # Funciones de consulta
+
+#REQ1
 def caracterizarReproducciones(catalog, caracteristica, valor_min, valor_max):
     mapa = catalog["RepsPor_{}".format(caracteristica)]
     contador = 0
     lista_caracteristica_rango = lt.newList(datastructure='ARRAY_LIST')
 
+#--------------------------------------------------------------------------------------------
 
+#REQ2
 def repsPor_Rango_danceability(mapa_ordenado, minDance, maxDance):
     #esto retorna una lista de las listas de reps por cada valor de danceability
     return om.values(mapa_ordenado, minDance, maxDance)
@@ -183,6 +190,7 @@ def ListReps_to_HashPistasUnicas(lista_listas_reps):
             , 'danceability': reproduccion['danceability'], 'track_id': track_id}
             mp.put(hashTable, track_id, valor_agregar)
     return hashTable
+
 
 def ListPistas_to_OMPistas_porEnergy(lista_pistas):
     #las llaves son valores de energy
@@ -204,7 +212,43 @@ def PistasPor_Rango_energy(mapa_ordenado, minEnergy, maxEnergy):
 
 
 
+#---------------------------------------------------------------------------------------------------
 
+
+#REQ3
+def Reproducciones_Rango_Instrumentalness(mapa, minInstrumental, maxInstrumental):
+    return om.values(mapa, minInstrumental, maxInstrumental)
+
+def Lista_unicas_Instrumentalness(Reproducciones_Rango_Instrumentalness):
+    nuevo_mapa = mp.newMap(maptype='PROBING')
+    for lista_reps in lt.iterator(Reproducciones_Rango_Instrumentalness):
+        for rep in lt.iterator(lista_reps):
+            track_id = rep['track_id']
+            track = {'artist_id': rep['artist_id'], 'tempo':rep['tempo']
+            , 'instrumentalness': rep['instrumentalness'], 'track_id': track_id}
+            mp.put(nuevo_mapa, rep['track_id'], track)
+    return nuevo_mapa
+
+def OM_pistas_tempo(lista_pistas):
+    om_pistas_tempo = om.newMap(omaptype='RBT',comparefunction=MAPcompareDecimals)
+    for pista in lt.iterator(lista_pistas):
+        llave = pista['tempo']
+        if not om.contains(om_pistas_tempo, llave):
+            listaPistasTempo = lt.newList(type= 'ARRAY')
+            lt.addLast(listaPistasTempo, pista)
+            om.put(om_pistas_tempo, llave, listaPistasTempo)
+        else:
+            listaPistasTempo = me.getValue(mp.get(om_pistas_tempo, llave))
+            lt.addLast(listaPistasTempo, pista)
+    
+    return om_pistas_tempo
+
+def PistasRangoTempo(OM_pistas_tempo, minTempo, maxTempo):
+    return om.values(OM_pistas_tempo, minTempo, maxTempo)
+
+
+
+#-----------------------------------------------------------------------------------------
 
 # Funciones utilizadas para comparar elementos dentro de una lista
 

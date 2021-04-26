@@ -94,6 +94,9 @@ def loadContextContent(catalog):
 def caracterizarReproducciones(catalog, caracteristica, valor_min, valor_max):
     resultado = model.caracterizarReproducciones(catalog, caracteristica, valor_min, valor_max)
     return resultado
+
+
+#--------------------------------------------------------------------------------------------------
 #REQ2
 def musicaParaFestejar(catalog, minDance, maxDance, minEnergy, maxEnergy):
     #mapa ordenado : llaves= dance de la rep, valor: reproducciones con ese dance
@@ -120,8 +123,28 @@ def musicaParaFestejar(catalog, minDance, maxDance, minEnergy, maxEnergy):
                 if stk.size(retornar) < 5:
                     stk.push(retornar, track)
     return cantidad, retornar
-
-
+#---------------------------------------------------------------------------------------------
+#REQ3
+def musicaParaEstudiar(catalog, minInstrumental, maxInstrumental, minTempo, maxTempo):
+    mapa = catalog['RepsPor_instrumentalness']
+    Reproducciones_Rango_Instrumentalness = model.Reproducciones_Rango_Instrumentalness(mapa, minInstrumental, maxInstrumental)
+    lista_pistas = model.Lista_unicas_Instrumentalness(Reproducciones_Rango_Instrumentalness)
+    #Obtenemos la lista
+    lista_pistas = mp.valueSet(NoRepeticiones_Instrumentalness)
+    #Organizamos por tempo con mapa
+    OM_pistas_tempo = model.OM_pistas_tempo(lista_pistas)
+    listaResultado = model.PistasRangoTempo(OM_pistas_tempo, minTempo, maxTempo)
+    cantidad = 0
+    retornar = stk.newStack()
+    #TERMINAR PARA QUE SEAN ALEATORIOS
+    for pista in lt.iterator(lista_resultado):
+        cantidad = cantidad + lt.size(pista)
+        if stk.size(retornar) < 5:
+            for track in lt.iterator(pista):
+                if stk.size(retornar) < 5:
+                    stk.push(retornar, track)
+    return cantidad, retornar
+#-------------------------------------------------------------------------------------------------
 #REQ4 
 #a:
 def nuevo_genero(catalog, nombre:str, lim_inf:float, lim_sup:float):
