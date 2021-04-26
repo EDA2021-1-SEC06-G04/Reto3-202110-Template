@@ -79,16 +79,19 @@ def newCatalog():
     #que segun su tempo/bpm corresponden a ese genero
     #OJO una MISMA EXACTA REPRODUCCION puede estar en la lista de distintos generos porque puede pertenecer a mas de un genero a la vez
     generos = mp.newMap(loadfactor=4.0)
-    mp.put(generos, ('Reggae', (60,90)),lt.newList(datastructure='ARRAY_LIST'))
-    mp.put(generos, ('Down-Tempo', (70,100)),lt.newList(datastructure='ARRAY_LIST'))
-    mp.put(generos, ('Chill-Out', (90,120)),lt.newList(datastructure='ARRAY_LIST'))
-    mp.put(generos, ('Hip-Hop', (85,115)),lt.newList(datastructure='ARRAY_LIST'))
-    mp.put(generos, ('Jazz and Funk', (120,125)),lt.newList(datastructure='ARRAY_LIST'))
-    mp.put(generos, ('Pop', (100,130)),lt.newList(datastructure='ARRAY_LIST'))
-    mp.put(generos, ('R&B', (60,80)),lt.newList(datastructure='ARRAY_LIST'))
-    mp.put(generos, ('Rock', (110,140)),lt.newList(datastructure='ARRAY_LIST'))
-    mp.put(generos, ('Metal', (100,160)),lt.newList(datastructure='ARRAY_LIST'))
+    mp.put(generos, 'Reggae', ((60,90),lt.newList(datastructure='ARRAY_LIST')))
+    mp.put(generos, 'Down-Tempo', ((70,100),lt.newList(datastructure='ARRAY_LIST')))
+    mp.put(generos, 'Chill-Out', ((90,120),lt.newList(datastructure='ARRAY_LIST')))
+    mp.put(generos, 'Hip-Hop', ((85,115),lt.newList(datastructure='ARRAY_LIST')))
+    mp.put(generos, 'Jazz and Funk', ((120,125),lt.newList(datastructure='ARRAY_LIST')))
+    mp.put(generos, 'Pop', ((100,130),lt.newList(datastructure='ARRAY_LIST')))
+    mp.put(generos, 'R&B', ((60,80),lt.newList(datastructure='ARRAY_LIST')))
+    mp.put(generos, 'Rock', ((110,140),lt.newList(datastructure='ARRAY_LIST')))
+    mp.put(generos, 'Metal', ((100,160),lt.newList(datastructure='ARRAY_LIST')))
     catalog['Generos'] = generos
+
+    #reproducciones totales:
+    catalog['Reproducciones_totales'] = lt.newList(datastructure='ARRAY_LIST')
     #-----------------------------------------------------------------------------------------------------------
     #-----------------------------------------------------------------------------------------------------------
     return catalog
@@ -96,9 +99,14 @@ def newCatalog():
 # Funciones para agregar informacion al catalogo
 
 def addRep(catalog, reproduccion):
+    #req1(req2 tambien usa la estructura de danceability cargada aqui):
     carga_req1(catalog, reproduccion)
+    #requisitos carga:
     guardar_artista_unico(catalog, reproduccion)
     guardar_pista_unica(catalog, reproduccion)
+    #req4:
+    lt.addLast(catalog['Reproducciones_totales'], reproduccion)
+
 
 def guardar_artista_unico(catalog, rep):
     mapa = catalog['Artistas_Unicos']
@@ -135,6 +143,19 @@ def addRep_a_mapaReq1(catalog, caracteristica, rep):
             agregar = {'id': rep['id'], 'artist_id': rep['artist_id'], 'danceability': rep['danceability']
             , 'energy': rep['energy'], 'track_id': rep['track_id']}
         lt.addLast(lista_existente, agregar)
+
+def carga_req4(catalog, rep, generos_a_correr):
+    mapa_generos = catalog['Generos']
+    tempo = rep['tempo']
+    for nombre_genero in lt.iterator(generos_a_correr):
+        rango_lista = me.getValue(mp.get(mapa_generos, nombre_genero))
+        rango = rango_lista[0]
+        inf = rango[0]
+        sup = rango[1]
+        #asumimos que los rangos de los generos son inclusivos
+        if inf <= tempo and tempo <= sup:
+            lista = rango_lista[1]
+            lt.addLast(lista, rep)
 
 
 

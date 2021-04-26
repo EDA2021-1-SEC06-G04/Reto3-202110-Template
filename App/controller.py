@@ -120,6 +120,27 @@ def musicaParaFestejar(catalog, minDance, maxDance, minEnergy, maxEnergy):
                 if stk.size(retornar) < 5:
                     stk.push(retornar, track)
     return cantidad, retornar
+
+
+#REQ4 
+#a:
+def nuevo_genero(catalog, nombre:str, lim_inf:float, lim_sup:float):
+    generos = catalog['Generos']
+    valor_de_genero_nuevo = ((lim_inf,lim_sup), lt.newList(datastructure='ARRAY_LIST'))
+    mp.put(generos, nombre, valor_de_genero_nuevo)
+
+#b:
+def req4(catalog, lista_generos):
+    #la lista que entra como parametro puede ser de ceros y unos viniendo del view para minimizar implementacion
+    # en el view y pasar la informacion binaria a una lista real de generos aqui
+    Reproducciones_totales = catalog['Reproducciones_totales']
+
+    for reproduccion in lt.iterator(Reproducciones_totales):
+        model.carga_req4(catalog, reproduccion, lista_generos)
+
+    #falta calcular lo que piden: tal vez algunas cuentas de cantidades deben hacerse dentro de model.carga_req4
+    #como por el ejemplo un contador para la cantidad total de reproducciones
+    #la cantidad de cada genero no es necesaria hacerla ahi adentro porque al final se le puede sacar size a la lista del genero
     
 
 

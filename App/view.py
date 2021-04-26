@@ -57,6 +57,7 @@ def printMenu():
     print("4- Encontrar música para festejar")
     print("5- Encontrar música para estudiar")
     print("6- Estudiar los géneros musicales")
+    print('7- FALTA ESTE')
 
 catalog = None
 
@@ -116,6 +117,14 @@ while True:
             d = pista['danceability']
             e = pista['energy']
             print('Track ID: {}, Artist ID: {}, Danceability: {}, Energy: {}'.format(tid, aid, d, e))
+
+    elif int(inputs[0])==5:
+        print("")
+
+    
+
+    elif int(inputs[0])==6:
+        print("")
 
 
 
