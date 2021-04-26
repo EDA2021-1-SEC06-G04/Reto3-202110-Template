@@ -55,7 +55,8 @@ def newCatalog():
     #-----------------------------------------------------------------------------------------------------------
     #-----------------------------------------------------------------------------------------------------------
     #Req1:
-    
+    #por cada caracteristica se hace un mapa ordenado que tiene los valores de la caracteristica como llaves y a la lista de 
+    # las reproducciones con el valor correspondiente a la caracteristica
     catalog['RepsPor_instrumentalness'] = om.newMap(omaptype='RBT',
                                       comparefunction=MAPcompareDecimals)
     catalog['RepsPor_liveness'] = om.newMap(omaptype='RBT',
@@ -70,6 +71,24 @@ def newCatalog():
                                       comparefunction=MAPcompareDecimals)
     catalog['RepsPor_valence'] = om.newMap(omaptype='RBT',
                                       comparefunction=MAPcompareDecimals)
+    #-----------------------------------------------------------------------------------------------------------
+    #-----------------------------------------------------------------------------------------------------------
+    #Req 4
+    #Generos: Aqui se guardaran las reproducciones partidas por generos:
+    # es decir: esto es un mapa/hashTable donde una llave es un genero(para ser preciso es una tupla de nombre y limites) y su valor es la lista de reproducciones 
+    #que segun su tempo/bpm corresponden a ese genero
+    #OJO una MISMA EXACTA REPRODUCCION puede estar en la lista de distintos generos porque puede pertenecer a mas de un genero a la vez
+    generos = mp.newMap(loadfactor=4.0)
+    mp.put(generos, ('Reggae', (60,90)),lt.newList(datastructure='ARRAY_LIST'))
+    mp.put(generos, ('Down-Tempo', (70,100)),lt.newList(datastructure='ARRAY_LIST'))
+    mp.put(generos, ('Chill-Out', (90,120)),lt.newList(datastructure='ARRAY_LIST'))
+    mp.put(generos, ('Hip-Hop', (85,115)),lt.newList(datastructure='ARRAY_LIST'))
+    mp.put(generos, ('Jazz and Funk', (120,125)),lt.newList(datastructure='ARRAY_LIST'))
+    mp.put(generos, ('Pop', (100,130)),lt.newList(datastructure='ARRAY_LIST'))
+    mp.put(generos, ('R&B', (60,80)),lt.newList(datastructure='ARRAY_LIST'))
+    mp.put(generos, ('Rock', (110,140)),lt.newList(datastructure='ARRAY_LIST'))
+    mp.put(generos, ('Metal', (100,160)),lt.newList(datastructure='ARRAY_LIST'))
+    catalog['Generos'] = generos
     #-----------------------------------------------------------------------------------------------------------
     #-----------------------------------------------------------------------------------------------------------
     return catalog
