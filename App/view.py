@@ -93,9 +93,14 @@ while True:
         print("Cantidad de elementos en el árbol: "+str(elementos))
         print("Altura del arbol: " + str(altura))
         print("------------------------------------------------------------")
-        valor_min = int(input("Escoja valor mínimo para la característica seleccionada: "))
-        valor_max = int(input("Escoja valor máximo para la característica seleccionada: "))
+        valor_min = float(input("Escoja valor mínimo para la característica seleccionada: "))
+        valor_max = float(input("Escoja valor máximo para la característica seleccionada: "))
         resultado = controller.caracterizarReproducciones(catalog, caracteristica, valor_min, valor_max)
+        cantidad_reps = resultado[0]
+        num_artistas = resultado[1]
+        print(cantidad_reps)
+        print(num_artistas)
+
 
     elif int(inputs[0])==4:
         print("")

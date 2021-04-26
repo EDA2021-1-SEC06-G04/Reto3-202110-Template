@@ -167,12 +167,25 @@ def carga_req4(catalog, rep, generos_a_correr):
 
 
 # Funciones de consulta
-
+#-------------------------------------------------------------------------------------------
 #REQ1
 def caracterizarReproducciones(catalog, caracteristica, valor_min, valor_max):
-    mapa = catalog["RepsPor_{}".format(caracteristica)]
-    contador = 0
-    lista_caracteristica_rango = lt.newList(datastructure='ARRAY_LIST')
+    lista = om.values(catalog["RepsPor_{}".format(caracteristica)], valor_min, valor_max)
+    return lt.size(lista)
+
+def numeroArtistasUnicos(catalog, caracteristica, valor_min, valor_max):
+    lista = om.values(catalog["RepsPor_{}".format(caracteristica)], valor_min, valor_max)
+    OM = om.newMap(omaptype='RBT', comparefunction=MAPcompareDecimals)
+    for rep in lt.iterator(lista):
+        llave = rep['artist_id']
+        if not om.contains(OM, llave):
+            om.put(OM, llave, rep)
+    num_artistas = om.valueSet(OM)
+    return lt.size(num_artistas)
+        
+    
+    
+    
 
 #--------------------------------------------------------------------------------------------
 
@@ -223,10 +236,11 @@ def Lista_unicas_Instrumentalness(Reproducciones_Rango_Instrumentalness):
     nuevo_mapa = mp.newMap(maptype='PROBING')
     for lista_reps in lt.iterator(Reproducciones_Rango_Instrumentalness):
         for rep in lt.iterator(lista_reps):
+            print("ESTOY ACA")
             track_id = rep['track_id']
             track = {'artist_id': rep['artist_id'], 'tempo':rep['tempo']
             , 'instrumentalness': rep['instrumentalness'], 'track_id': track_id}
-            mp.put(nuevo_mapa, rep['track_id'], track)
+            mp.put(nuevo_mapa, track_id, track)
     return nuevo_mapa
 
 def OM_pistas_tempo(lista_pistas):
