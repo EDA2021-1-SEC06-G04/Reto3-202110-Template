@@ -57,7 +57,7 @@ def printMenu():
     print("4- Encontrar música para festejar")
     print("5- Encontrar música para estudiar")
     print("6- Estudiar los géneros musicales")
-    print('7- FALTA ESTE')
+    print("7- Indicar el género musical más escuchado en el tiempo")
 
 catalog = None
 
@@ -138,6 +138,8 @@ while True:
         print("")
 
 
+    elif int(inputs[0])==7:
+        print("")
 
 
 
