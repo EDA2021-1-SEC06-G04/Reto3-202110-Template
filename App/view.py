@@ -98,8 +98,8 @@ while True:
         resultado = controller.caracterizarReproducciones(catalog, caracteristica, valor_min, valor_max)
         cantidad_reps = resultado[0]
         num_artistas = resultado[1]
-        print(cantidad_reps)
-        print(num_artistas)
+        print('REPS:{}'.format(cantidad_reps))
+        print('ARTISTAS:{}'.format(num_artistas))
 
 
     elif int(inputs[0])==4:
@@ -130,7 +130,8 @@ while True:
         maxI = float(input('Ingresa el máximo valor de Instrumentallness:\n'))
         maxT = float(input('Ingresa el máximo valor de Tempo:\n'))
         resultado = controller.musicaParaEstudiar(catalog, minI, maxI, minT, maxT)
-
+        cantidad_pistas = resultado[0]
+        cinco_pistas_supuestamente_aleatorias = resultado[1]
 
     
 

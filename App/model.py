@@ -74,8 +74,8 @@ def newCatalog():
     #-----------------------------------------------------------------------------------------------------------
     #Req 4
     #Generos: Aqui se guardaran las reproducciones partidas por generos:
-    # es decir: esto es un mapa/hashTable donde una llave es un genero(para ser preciso es una tupla de nombre y limites) y su valor es la lista de reproducciones 
-    #que segun su tempo/bpm corresponden a ese genero
+    # es decir: esto es un mapa/hashTable donde una llave es un genero(nombre del genero) y su valor es una tupla:
+    # 1: una tupla de los limites del rango 2. la lista de reproducciones que segun su tempo/bpm corresponden a ese genero
     #OJO una MISMA EXACTA REPRODUCCION puede estar en la lista de distintos generos porque puede pertenecer a mas de un genero a la vez
     generos = mp.newMap(loadfactor=4.0)
     mp.put(generos, 'Reggae', ((60,90),lt.newList(datastructure='ARRAY_LIST')))
@@ -171,33 +171,26 @@ def carga_req4(catalog, rep, generos_a_correr):
 # Funciones de consulta
 #-------------------------------------------------------------------------------------------
 #REQ1
-def caracterizarReproducciones(catalog, caracteristica, valor_min, valor_max):
-    lista = om.values(catalog["RepsPor_{}".format(caracteristica)], valor_min, valor_max)
-    return lt.size(lista)
 
-def numeroArtistasUnicos(catalog, caracteristica, valor_min, valor_max):
+
+def numeroReps_y_ArtistasUnicos(catalog, caracteristica, valor_min, valor_max):
     lista_listas = om.values(catalog["RepsPor_{}".format(caracteristica)], valor_min, valor_max)
     mapa = mp.newMap(loadfactor=4.0)
+#    numeroReps = 0
+    mapa2 = mp.newMap(loadfactor=4.0)
     for lista in lt.iterator(lista_listas):
+#        numeroReps = numeroReps + lt.size(lista)
         for rep in lt.iterator(lista):
             llave = rep['artist_id']
+            llave2 = rep['id']
             if not mp.contains(mapa, llave):
                 mp.put(mapa, llave, rep)
-    num_artistas = mp.valueSet(mapa)
-    return lt.size(num_artistas)
+            if not mp.contains(mapa2, llave2):
+                mp.put(mapa2, llave2, rep)
+    num_artistas = mp.size(mapa)
+    return num_artistas, mp.size(mapa2)
 
-#comentarios: 
-#1. seria mas eficiente juntarlos en una sola funcion porque la linea 173 y 177 son iguales, esa info se puede retornar como una tupla 
-# en una sola funcion
-
-#2. no veo necesario el uso de un ordered map, creo que con map se puede(y son mas eficientes)
-        
-def num_artistas(catalog, caracteristica, valor_min, valor_max):
-    OM = mp.newMap(maptype='CHAINING', comparefunction=MAPcompareDecimals)
-    
-    
-    
-    
+ 
 
 #--------------------------------------------------------------------------------------------
 
@@ -248,7 +241,7 @@ def Lista_unicas_Instrumentalness(Reproducciones_Rango_Instrumentalness):
     nuevo_mapa = mp.newMap(maptype='PROBING')
     for lista_reps in lt.iterator(Reproducciones_Rango_Instrumentalness):
         for rep in lt.iterator(lista_reps):
-            print("ESTOY ACA")
+#            print(rep)
             track_id = rep['track_id']
             track = {'artist_id': rep['artist_id'], 'tempo':rep['tempo']
             , 'instrumentalness': rep['instrumentalness'], 'track_id': track_id}
@@ -260,17 +253,17 @@ def OM_pistas_tempo(lista_pistas):
     for pista in lt.iterator(lista_pistas):
         llave = pista['tempo']
         if not om.contains(om_pistas_tempo, llave):
-            listaPistasTempo = lt.newList(type= 'ARRAY')
+            listaPistasTempo = lt.newList(datastructure='ARRAY_LIST')
             lt.addLast(listaPistasTempo, pista)
             om.put(om_pistas_tempo, llave, listaPistasTempo)
         else:
-            listaPistasTempo = me.getValue(mp.get(om_pistas_tempo, llave))
+            listaPistasTempo = me.getValue(om.get(om_pistas_tempo, llave))
             lt.addLast(listaPistasTempo, pista)
     
     return om_pistas_tempo
 
-def PistasRangoTempo(OM_pistas_tempo, minTempo, maxTempo):
-    return om.values(OM_pistas_tempo, minTempo, maxTempo)
+def PistasRangoTempo(oM_pistas_tempo, minTempo, maxTempo):
+    return om.values(oM_pistas_tempo, minTempo, maxTempo)
 
 
 
