@@ -34,8 +34,7 @@ from DISClib.Algorithms.Sorting import shellsort as sa
 assert cf
 
 """
-Se define la estructura de un catálogo de videos. El catálogo tendrá dos listas, una para los videos, otra para las categorias de
-los mismos.
+Se define la estructura de un catálogo de videos.
 """
 
 # Construccion de modelos
@@ -44,7 +43,7 @@ def newCatalog():
 
     Retorna el catálogo inicializado.
     """
-    catalog = {'RepsPorInstrumentalness': None,
+    catalog = {'RepsPor_instrumentalness': None,
                 }
     
     #-----------------------------------------------------------------------------------------------------------
@@ -145,6 +144,9 @@ def addRep_a_mapaReq1(catalog, caracteristica, rep):
         if caracteristica=='danceability':
             agregar = {'id': rep['id'], 'artist_id': rep['artist_id'], 'danceability': rep['danceability']
             , 'energy': rep['energy'], 'track_id': rep['track_id']}
+        if caracteristica=='instrumentalness':
+            agregar = {'id': rep['id'], 'artist_id': rep['artist_id'], 'instrumentalness': rep['instrumentalness']
+            , 'tempo': rep['tempo'], 'track_id': rep['track_id']}
         lt.addLast(lista_existente, agregar)
 
 def carga_req4(catalog, rep, generos_a_correr):
@@ -177,12 +179,16 @@ def numeroArtistasUnicos(catalog, caracteristica, valor_min, valor_max):
     lista = om.values(catalog["RepsPor_{}".format(caracteristica)], valor_min, valor_max)
     OM = om.newMap(omaptype='RBT', comparefunction=MAPcompareDecimals)
     for rep in lt.iterator(lista):
+        print(rep)
         llave = rep['artist_id']
         if not om.contains(OM, llave):
             om.put(OM, llave, rep)
     num_artistas = om.valueSet(OM)
     return lt.size(num_artistas)
         
+def num_artistas(catalog, caracteristica, valor_min, valor_max):
+    OM = mp.newMap(maptype='CHAINING', comparefunction=MAPcompareDecimals)
+    
     
     
     
