@@ -92,6 +92,7 @@ def loadContextContent(catalog):
 # Funciones de consulta sobre el catálogo
 #REQ1
 def caracterizarReproducciones(catalog, caracteristica, valor_min, valor_max):
+    #comentarios en model linea 186
     cantidad_reps = model.caracterizarReproducciones(catalog, caracteristica, valor_min, valor_max)
     num_artistas = model.numeroArtistasUnicos(catalog, caracteristica, valor_min, valor_max)
     return cantidad_reps, num_artistas

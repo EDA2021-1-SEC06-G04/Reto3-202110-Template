@@ -182,6 +182,12 @@ def numeroArtistasUnicos(catalog, caracteristica, valor_min, valor_max):
             om.put(OM, llave, rep)
     num_artistas = om.valueSet(OM)
     return lt.size(num_artistas)
+
+#comentarios: 
+#1. seria mas eficiente juntarlos en una sola funcion porque la linea 173 y 177 son iguales, esa info se puede retornar como una tupla 
+# en una sola funcion
+
+#2. no veo necesario el uso de un ordered map, creo que con map se puede(y son mas eficientes)
         
     
     
