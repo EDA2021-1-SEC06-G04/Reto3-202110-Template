@@ -137,7 +137,9 @@ while True:
 
     elif int(inputs[0])==6:
         print("")
-
+        #agregar genero se hace con la funcion en controller llamada nuevo_genero
+        # correr un for sobre los generos (llaves de el mapa catalog['Generos'])
+        # para cada uno preguntar si lo quiere incluir o no , el print se puede hacer con format
 
     elif int(inputs[0])==7:
         print("")

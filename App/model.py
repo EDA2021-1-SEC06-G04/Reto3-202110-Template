@@ -90,7 +90,7 @@ def newCatalog():
     catalog['Generos'] = generos
 
     #reproducciones totales:
-    catalog['Reproducciones_totales'] = lt.newList(datastructure='ARRAY_LIST')
+    catalog['Reproducciones_totales'] = mp.newMap(loadfactor=4.0)
     #-----------------------------------------------------------------------------------------------------------
     #-----------------------------------------------------------------------------------------------------------
     return catalog
@@ -104,7 +104,7 @@ def addRep(catalog, reproduccion):
     guardar_artista_unico(catalog, reproduccion)
     guardar_pista_unica(catalog, reproduccion)
     #req4:
-    lt.addLast(catalog['Reproducciones_totales'], reproduccion)
+    mp.put(catalog['Reproducciones_totales'], reproduccion['id'], reproduccion)
 
 
 def guardar_artista_unico(catalog, rep):
@@ -152,6 +152,7 @@ def addRep_a_mapaReq1(catalog, caracteristica, rep):
 def carga_req4(catalog, rep, generos_a_correr):
     mapa_generos = catalog['Generos']
     tempo = rep['tempo']
+    agregado = False
     for nombre_genero in lt.iterator(generos_a_correr):
         rango_lista = me.getValue(mp.get(mapa_generos, nombre_genero))
         rango = rango_lista[0]
@@ -161,6 +162,9 @@ def carga_req4(catalog, rep, generos_a_correr):
         if inf <= tempo and tempo <= sup:
             lista = rango_lista[1]
             lt.addLast(lista, rep)
+            agregado = True
+    
+    return agregado
 
 
 

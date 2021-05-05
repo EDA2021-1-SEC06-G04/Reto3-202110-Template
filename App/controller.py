@@ -157,10 +157,34 @@ def nuevo_genero(catalog, nombre:str, lim_inf:float, lim_sup:float):
 def req4(catalog, lista_generos):
     #la lista que entra como parametro puede ser de ceros y unos viniendo del view para minimizar implementacion
     # en el view y pasar la informacion binaria a una lista real de generos aqui
-    Reproducciones_totales = catalog['Reproducciones_totales']
-
+    Reproducciones_totales = mp.valueSet(catalog['Reproducciones_totales'])
+    
+    total_reproducciones_generos = 0
     for reproduccion in lt.iterator(Reproducciones_totales):
-        model.carga_req4(catalog, reproduccion, lista_generos)
+        agregado = model.carga_req4(catalog, reproduccion, lista_generos)
+        if agregado:
+            total_reproducciones_generos = total_reproducciones_generos + 1
+        
+    
+    mapa_respuesta = mp.newMap(loadfactor=4.0)
+    for genero in lt.iterator(lista_generos):
+        reps_del_genero= me.getValue(mp.get(catalog['Generos'], genero))[1]
+        tamaño_genero = lt.size(reps_del_genero)
+        
+        artistas_genero = mp.newMap(loadfactor=4.0)
+        for rep in lt.iterator(reps_del_genero):
+            mp.put(artistas_genero, rep['artist_id'], rep['artist_id'])
+        
+        mp.put(mapa_respuesta, genero, (tamaño_genero, mp.valueSet(artistas_genero)))
+    return mapa_respuesta, total_reproducciones_generos
+        
+
+
+
+    
+
+
+    
 
     #falta calcular lo que piden: tal vez algunas cuentas de cantidades deben hacerse dentro de model.carga_req4
     #como por el ejemplo un contador para la cantidad total de reproducciones
