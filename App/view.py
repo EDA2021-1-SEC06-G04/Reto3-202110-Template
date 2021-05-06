@@ -27,6 +27,7 @@ from DISClib.ADT import list as lt
 from DISClib.ADT import orderedmap as om
 from DISClib.ADT import map as mp
 from DISClib.ADT import stack as stk
+from DISClib.DataStructures import mapentry as me
 assert cf
 
 
@@ -47,6 +48,29 @@ def initCatalog():
     """
     return controller.initCatalog()
 
+def printR4(info_generos, total_reproducciones):
+    print('-----------------------------------------------------------------------')
+    print('El total reproducciones entre los generos consultados es: {}'.format(total_reproducciones))
+    print('-----------------------------------------------------------------------')
+    for genero in lt.iterator(mp.keySet(info_generos)):
+
+        info_del_genero = me.getValue(mp.get(info_generos, genero))
+        tamaño_genero = info_del_genero[0]
+        artistas_genero = info_del_genero[1]
+        cantidad_artistas = lt.size(artistas_genero)
+        print('-----------------------------------------------------------------------')
+        print('El genero {} tiene {} distintas reproducciones y {} distintos artistas'.format(genero, tamaño_genero, cantidad_artistas))
+        
+        print('Diez artistas del genero {} son:'.format(genero))
+        contador = 0
+        for artista in lt.iterator(artistas_genero):
+            print('Artista {} : {}'.format(contador + 1,artista))
+            contador = contador + 1
+            if contador == 10:
+                break
+        print('-----------------------------------------------------------------------')
+    print('-----------------------------------------------------------------------')
+        
 
 
 def printMenu():
@@ -138,6 +162,34 @@ while True:
     elif int(inputs[0])==6:
         print("")
         #agregar genero se hace con la funcion en controller llamada nuevo_genero
+        print('Antes de escoger los generos a consultar, ¿Deseas definir un genero nuevo?')
+        print('Presiona: 1 para agregar genero o 0 para continuar.')
+        decision = input('')
+        while decision == '1':
+            
+            nombre_genero_nuevo = str(input('Introduce el nombre del genero nuevo: \n'))
+            lim_inf = float(input('Introduce el limite inferior de bpm del genero nuevo: \n'))
+            lim_sup = float(input('Introduce el limite superior de bpm del genero nuevo: \n'))
+            controller.nuevo_genero(catalog, nombre_genero_nuevo, lim_inf, lim_sup)
+            print('Presiona: 1 para agregar genero o 0 para continuar.')
+            decision = input('')
+        generos_a_correr = lt.newList('ARRAY_LIST')
+        for genero_preguntar in lt.iterator(mp.keySet(catalog['Generos'])):
+            print('¿Deseas incluir el genero {}?'.format(genero_preguntar))
+            incluido = input('Presiona: 1 para consultar este genero o 0 para continuar.\n')
+            if incluido == '1':
+                lt.addLast(generos_a_correr, genero_preguntar)
+        respuesta_cruda = controller.req4(catalog, generos_a_correr)
+        total_reproducciones = respuesta_cruda[1]
+        info_generos = respuesta_cruda[0]
+        printR4(info_generos, total_reproducciones)
+
+
+
+
+            
+        
+#continuar
         # correr un for sobre los generos (llaves de el mapa catalog['Generos'])
         # para cada uno preguntar si lo quiere incluir o no , el print se puede hacer con format
 
