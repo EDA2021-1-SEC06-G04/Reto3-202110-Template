@@ -59,7 +59,7 @@ def printR4(info_generos, total_reproducciones):
         artistas_genero = info_del_genero[1]
         cantidad_artistas = lt.size(artistas_genero)
         print('-----------------------------------------------------------------------')
-        print('El genero {} tiene {} distintas reproducciones y {} distintos artistas'.format(genero, tamaño_genero, cantidad_artistas))
+        print('El genero {} tiene {} distintas reproducciones y {} distintos artistas.'.format(genero, tamaño_genero, cantidad_artistas))
         
         print('Diez artistas del genero {} son:'.format(genero))
         contador = 0
@@ -74,6 +74,7 @@ def printR4(info_generos, total_reproducciones):
 
 
 def printMenu():
+    print("-----------------------------------------------------------------------")
     print("Bienvenido")
     print("1- Inicializar catálogo")
     print("2- Cargar información en el catálogo")
@@ -122,8 +123,10 @@ while True:
         resultado = controller.caracterizarReproducciones(catalog, caracteristica, valor_min, valor_max)
         cantidad_reps = resultado[0]
         num_artistas = resultado[1]
+        print("------------------------------------------------------------")
         print('REPS:{}'.format(cantidad_reps))
         print('ARTISTAS:{}'.format(num_artistas))
+        print("------------------------------------------------------------")
 
 
     elif int(inputs[0])==4:
@@ -139,14 +142,17 @@ while True:
         print('Buscando pistas con Energy entre {} y {}, y Danceability entre {} y {}:'.format(minE,maxE,minD,maxD))
         print('Se encontraron {} pistas.'.format(cantidad))
         print('5 pistas :')
-        for i in range(5):
-            pista = stk.pop(stack_cinco_tracks)
-            tid = pista['track_id']
-            aid = pista['artist_id']
-            d = pista['danceability']
-            e = pista['energy']
-            print('Track ID: {}, Artist ID: {}, Danceability: {}, Energy: {}'.format(tid, aid, d, e))
-
+        if not stk.isEmpty(stack_cinco_tracks):
+            for i in range(5):
+                pista = stk.pop(stack_cinco_tracks)
+                tid = pista['track_id']
+                aid = pista['artist_id']
+                d = pista['danceability']
+                e = pista['energy']
+                print('Track ID: {}, Artist ID: {}, Danceability: {}, Energy: {}'.format(tid, aid, d, e))
+        else:
+            print('No hay pistas.')
+        
     elif int(inputs[0])==5:
         print("")
         minI = float(input('Ingresa el mínimo valor de Instrumentalness:\n'))
@@ -156,6 +162,20 @@ while True:
         resultado = controller.musicaParaEstudiar(catalog, minI, maxI, minT, maxT)
         cantidad_pistas = resultado[0]
         cinco_pistas_supuestamente_aleatorias = resultado[1]
+        print('-------------------------------------------------------------')
+        print('Buscando pistas con Instrumentalness entre {} y {}, y Tempo entre {} y {}:'.format(minI,maxI,minT,maxT))
+        print('Se encontraron {} pistas.'.format(cantidad_pistas))
+        print('5 pistas :')
+        if not stk.isEmpty(cinco_pistas_supuestamente_aleatorias):
+            for i in range(5):
+                pista = stk.pop(cinco_pistas_supuestamente_aleatorias)
+                tid = pista['track_id']
+                aid = pista['artist_id']
+                I = pista['instrumentalness']
+                t = pista['tempo']
+                print('Track ID: {}, Artist ID: {}, Instrumentalness: {}, Tempo: {}'.format(tid, aid, I, t))
+        else:
+            print('No hay pistas.')
 
     
 
