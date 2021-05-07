@@ -130,9 +130,11 @@ def addRep_a_mapaReq1(catalog, caracteristica, rep):
     if not om.contains(mapa, llave):
         nueva_lista = lt.newList(datastructure='ARRAY_LIST')
         agregar = {'id': rep['id'], 'artist_id': rep['artist_id']}
+        # esto se hace por req2
         if caracteristica=='danceability':
             agregar = {'id': rep['id'], 'artist_id': rep['artist_id'], 'danceability': rep['danceability']
             , 'energy': rep['energy'], 'track_id': rep['track_id']}
+        #esto se hace por req3
         if caracteristica=="instrumentalness":
             agregar = {'id': rep['id'], 'artist_id': rep['artist_id'], 'instrumentalness': rep['instrumentalness']
             , 'tempo': rep['tempo'], 'track_id': rep['track_id']}
@@ -187,10 +189,10 @@ def numeroReps_y_ArtistasUnicos(catalog, caracteristica, valor_min, valor_max):
         for rep in lt.iterator(lista):
             llave = rep['artist_id']
             llave2 = rep['id']
-            if not mp.contains(mapa, llave):
-                mp.put(mapa, llave, rep)
-            if not mp.contains(mapa2, llave2):
-                mp.put(mapa2, llave2, rep)
+#            if not mp.contains(mapa, llave):
+            mp.put(mapa, llave, rep)
+#            if not mp.contains(mapa2, llave2):
+            mp.put(mapa2, llave2, rep)
     num_artistas = mp.size(mapa)
     return num_artistas, mp.size(mapa2)
 

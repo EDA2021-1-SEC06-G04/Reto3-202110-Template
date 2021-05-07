@@ -23,6 +23,8 @@
 import config as cf
 import model
 import csv
+from random import sample
+from random import randint
 from DISClib.ADT import list as lt
 from DISClib.ADT import map as mp
 from DISClib.ADT import orderedmap as om
@@ -116,13 +118,21 @@ def musicaParaFestejar(catalog, minDance, maxDance, minEnergy, maxEnergy):
     lista_resultado = model.PistasPor_Rango_energy(Om_pistasEn_Rango_danceability, minEnergy, maxEnergy)
     cantidad = 0
     retornar = stk.newStack()
-    # aqui  hay que cambiar para que no coja los primeros cinco sino aleatorios
+
+    
     for pistasConEnergy in lt.iterator(lista_resultado):
         cantidad = cantidad + lt.size(pistasConEnergy)
-        if stk.size(retornar) < 5:
+        '''if stk.size(retornar) < 5 and :
             for track in lt.iterator(pistasConEnergy):
                 if stk.size(retornar) < 5:
-                    stk.push(retornar, track)
+                    stk.push(retornar, track)'''
+
+    aleatorios_1 = sample(range(1,lt.size(lista_resultado)), 5)
+    for pos1 in aleatorios_1:
+        lista = lt.getElement(lista_resultado, pos1)
+        pos2 = randint(1, lt.size(lista))
+        elemento = lt.getElement(lista, pos2)
+        stk.push(retornar, elemento)
     return cantidad, retornar
 #---------------------------------------------------------------------------------------------
 #REQ3
@@ -137,13 +147,17 @@ def musicaParaEstudiar(catalog, minInstrumental, maxInstrumental, minTempo, maxT
     lista_resultado = model.PistasRangoTempo(om_pistas_tempo, minTempo, maxTempo)
     cantidad = 0
     retornar = stk.newStack()
-    #TERMINAR PARA QUE SEAN ALEATORIOS
+    
     for lista in lt.iterator(lista_resultado):
         cantidad = cantidad + lt.size(lista)
-        if stk.size(retornar) < 5:
-            for track in lt.iterator(lista):
-                if stk.size(retornar) < 5:
-                    stk.push(retornar, track)
+        
+
+    aleatorios_1 = sample(range(1,lt.size(lista_resultado)), 5)
+    for pos1 in aleatorios_1:
+        lista = lt.getElement(lista_resultado, pos1)
+        pos2 = randint(1, lt.size(lista))
+        elemento = lt.getElement(lista, pos2)
+        stk.push(retornar, elemento)
     return cantidad, retornar
 #-------------------------------------------------------------------------------------------------
 #REQ4 
