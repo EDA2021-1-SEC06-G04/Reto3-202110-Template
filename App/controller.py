@@ -31,6 +31,7 @@ from DISClib.ADT import orderedmap as om
 from DISClib.ADT import stack as stk
 from DISClib.DataStructures import mapentry as me
 from datetime import datetime
+from datetime import time
 
 contextContentFeatures_file = 'context_content_features-small.csv'
 usertrackhashtagtimestamp_file = 'user_track_hashtag_timestamp-small.csv'
@@ -76,7 +77,8 @@ def loadContextContent(catalog):
             rep_agregar[info] = float(rep_leida[info])
     #    rep_agregar['created_at'] = datetime.strptime(rep_leida['created_at'], '%y.%d.%m').date()
         rep_agregar['created_at'] = datetime.strptime(rep_leida['created_at'], '%Y-%m-%d %H:%M:%S')
-
+        rep_agregar['hora'] = datetime.strptime(rep_leida['created_at'].split(' ')[1], '%H:%M:%S')
+    
     #    rep_agregar['tags'] = lt.newList('ARRAY_LIST')
     #    for tag in rep_leida['tags'].split('"|"'):
     #        tag.replace('"','')
@@ -86,6 +88,7 @@ def loadContextContent(catalog):
         contador_datos += 1
 #        if contador_datos >= size_datos:
 #            break
+
     return contador_datos
 
 # Funciones de ordenamiento

@@ -107,11 +107,11 @@ while True:
 
         #BORRAR ESTO DESPUES
         print('TAMAÑO:'+ str(mp.size(catalog['Reproducciones_totales'])))
-        print('Fechas: ' + str(lt.firstElement(mp.valueSet(catalog['Reproducciones_totales']))['created_at']))
+        #print('Fechas: ' + str(lt.firstElement(mp.valueSet(catalog['Reproducciones_totales']))['created_at']<lt.getElement(mp.valueSet(catalog['Reproducciones_totales']), 2)['created_at']))
         print('id:' + str(lt.firstElement(mp.valueSet(catalog['Reproducciones_totales']))['id']))
         print('instrumentalness' + str(lt.firstElement(mp.valueSet(catalog['Reproducciones_totales']))['instrumentalness']))
         print('tempo:' +str(lt.firstElement(mp.valueSet(catalog['Reproducciones_totales']))['tempo']))
-        #print('hora: ' + str(lt.firstElement(mp.valueSet(catalog['Reproducciones_totales']))['hora']))
+        #print('hora: ' + str(lt.firstElement(mp.valueSet(catalog['Reproducciones_totales']))['hora']<lt.getElement(mp.valueSet(catalog['Reproducciones_totales']), 2)['hora']))
         #HASTA ACA
 
         print("Registros de eventos de escucha cargados: "+ str(cantidad_total_reps))
