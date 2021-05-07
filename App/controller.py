@@ -30,6 +30,7 @@ from DISClib.ADT import map as mp
 from DISClib.ADT import orderedmap as om
 from DISClib.ADT import stack as stk
 from DISClib.DataStructures import mapentry as me
+from datetime import datetime
 
 contextContentFeatures_file = 'context_content_features-small.csv'
 usertrackhashtagtimestamp_file = 'user_track_hashtag_timestamp-small.csv'
@@ -73,10 +74,9 @@ def loadContextContent(catalog):
             rep_agregar[info] = str(rep_leida[info])
         for info in info_numerica:
             rep_agregar[info] = float(rep_leida[info])
-        
-
     #    rep_agregar['created_at'] = datetime.strptime(rep_leida['created_at'], '%y.%d.%m').date()
-        
+        rep_agregar['created_at'] = datetime.strptime(rep_leida['created_at'], '%Y-%m-%d %H:%M:%S')
+
     #    rep_agregar['tags'] = lt.newList('ARRAY_LIST')
     #    for tag in rep_leida['tags'].split('"|"'):
     #        tag.replace('"','')

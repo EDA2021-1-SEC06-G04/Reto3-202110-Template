@@ -104,7 +104,7 @@ def addRep(catalog, reproduccion):
     guardar_artista_unico(catalog, reproduccion)
     guardar_pista_unica(catalog, reproduccion)
     #req4:
-    mp.put(catalog['Reproducciones_totales'], reproduccion['id'], reproduccion)
+    mp.put(catalog['Reproducciones_totales'], (reproduccion['user_id'],reproduccion['track_id']), reproduccion)
 
 
 def guardar_artista_unico(catalog, rep):

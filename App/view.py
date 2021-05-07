@@ -104,6 +104,16 @@ while True:
         cantidad_artistas_unicos = lt.size(mp.keySet(catalog['Artistas_Unicos']))
         cantidad_pistas_unicas = lt.size((mp.keySet(catalog['Pistas_Unicas'])))
         print("------------------------------------------------------------")
+
+        #BORRAR ESTO DESPUES
+        print('TAMAÑO:'+ str(mp.size(catalog['Reproducciones_totales'])))
+        print('Fechas: ' + str(lt.firstElement(mp.valueSet(catalog['Reproducciones_totales']))['created_at']))
+        print('id:' + str(lt.firstElement(mp.valueSet(catalog['Reproducciones_totales']))['id']))
+        print('instrumentalness' + str(lt.firstElement(mp.valueSet(catalog['Reproducciones_totales']))['instrumentalness']))
+        print('tempo:' +str(lt.firstElement(mp.valueSet(catalog['Reproducciones_totales']))['tempo']))
+        #print('hora: ' + str(lt.firstElement(mp.valueSet(catalog['Reproducciones_totales']))['hora']))
+        #HASTA ACA
+
         print("Registros de eventos de escucha cargados: "+ str(cantidad_total_reps))
         print("Artistas únicos cargados: " + str(cantidad_artistas_unicos))
         print("Pistas de audio únicas cargadas: "+ str(cantidad_pistas_unicas))
