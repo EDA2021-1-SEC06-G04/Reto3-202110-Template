@@ -82,7 +82,7 @@ def printMenu():
     print("4- Encontrar música para festejar")
     print("5- Encontrar música para estudiar")
     print("6- Estudiar los géneros musicales")
-    print("7- Indicar el género musical más escuchado en el tiempo")
+    print("7- Indicar el género musical más escuchado en un rango de horas")
 
 catalog = None
 
@@ -204,7 +204,10 @@ while True:
         info_generos = respuesta_cruda[0]
         printR4(info_generos, total_reproducciones)
 
-
+    elif int(inputs[0])==7:
+        print("")
+        hora_min = input('Indique la hora mínima que quiera consultar: \n')
+        hora_max = input('Indique la hora máxima que quiera consultar: \n')
 
 
             
