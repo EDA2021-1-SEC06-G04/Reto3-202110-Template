@@ -189,7 +189,6 @@ while True:
         hora_min = input('Indique la hora mínima que quiera consultar: \n')
         hora_max = input('Indique la hora máxima que quiera consultar: \n')
 
-
             
         
 #continuar

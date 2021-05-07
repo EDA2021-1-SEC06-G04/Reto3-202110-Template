@@ -88,7 +88,7 @@ def newCatalog():
     mp.put(generos, 'Rock', ((110,140),lt.newList(datastructure='ARRAY_LIST')))
     mp.put(generos, 'Metal', ((100,160),lt.newList(datastructure='ARRAY_LIST')))
     catalog['Generos'] = generos
-
+    
     #reproducciones totales:
     catalog['Reproducciones_totales'] = mp.newMap(loadfactor=4.0)
     #-----------------------------------------------------------------------------------------------------------
