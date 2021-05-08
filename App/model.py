@@ -335,6 +335,8 @@ def OM_pistas_tempo(lista_pistas):
 
 def PistasRangoTempo(oM_pistas_tempo, minTempo, maxTempo):
     return om.values(oM_pistas_tempo, minTempo, maxTempo)
+#----------------------------------------------------------------------------------------
+#REQ5
 
 
 
