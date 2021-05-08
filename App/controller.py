@@ -78,7 +78,7 @@ def loadContextContent(catalog):
     #    rep_agregar['created_at'] = datetime.strptime(rep_leida['created_at'], '%y.%d.%m').date()
         rep_agregar['created_at'] = datetime.strptime(rep_leida['created_at'], '%Y-%m-%d %H:%M:%S')
         rep_agregar['hora'] = datetime.strptime(rep_leida['created_at'].split(' ')[1], '%H:%M:%S')
-    
+        rep_agregar['id'] = (rep_agregar['user_id'],rep_agregar['track_id'], rep_agregar['created_at'])
     #    rep_agregar['tags'] = lt.newList('ARRAY_LIST')
     #    for tag in rep_leida['tags'].split('"|"'):
     #        tag.replace('"','')
