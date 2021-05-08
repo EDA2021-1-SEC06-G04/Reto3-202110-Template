@@ -28,6 +28,8 @@ from DISClib.ADT import orderedmap as om
 from DISClib.ADT import map as mp
 from DISClib.ADT import stack as stk
 from DISClib.DataStructures import mapentry as me
+from datetime import datetime
+from datetime import time
 assert cf
 
 
@@ -108,19 +110,21 @@ while True:
         cantidad_pistas_unicas = lt.size((mp.keySet(catalog['Pistas_Unicas'])))
         print("------------------------------------------------------------")
 
-        #BORRAR ESTO DESPUES
-        print('TAMAÑO:'+ str(mp.size(catalog['Reproducciones_totales'])))
-        #print('Fechas: ' + str(lt.firstElement(mp.valueSet(catalog['Reproducciones_totales']))['created_at']<lt.getElement(mp.valueSet(catalog['Reproducciones_totales']), 2)['created_at']))
-        print('id:' + str(lt.firstElement(mp.valueSet(catalog['Reproducciones_totales']))['id']))
-        print('instrumentalness' + str(lt.firstElement(mp.valueSet(catalog['Reproducciones_totales']))['instrumentalness']))
-        print('tempo:' +str(lt.firstElement(mp.valueSet(catalog['Reproducciones_totales']))['tempo']))
-        #print('hora: ' + str(lt.firstElement(mp.valueSet(catalog['Reproducciones_totales']))['hora']<lt.getElement(mp.valueSet(catalog['Reproducciones_totales']), 2)['hora']))
-        #HASTA ACA
 
         print("Registros de eventos de escucha cargados: "+ str(cantidad_total_reps))
         print("Artistas únicos cargados: " + str(cantidad_artistas_unicos))
         print("Pistas de audio únicas cargadas: "+ str(cantidad_pistas_unicas))
         print("------------------------------------------------------------")
+
+        #PRUEBAS:----
+        primer_hashtag = lt.firstElement(mp.keySet(catalog['Hashtags']))
+        print(primer_hashtag)
+        print(me.getValue(mp.get(catalog['Hashtags'], primer_hashtag)))
+        primera_hora = datetime.strptime('3:40:00', '%H:%M:%S')
+        segunda_hora = datetime.strptime('13:40:00', '%H:%M:%S')
+        print(lt.firstElement(om.values(catalog['RepsPor_hora'], primera_hora, segunda_hora)))
+
+        #PRUEBAS HASTA AQUI ----
     
     #---------------------------------------------------------------------------------------------
     #REQ 1
