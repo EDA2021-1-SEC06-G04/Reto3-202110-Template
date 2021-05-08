@@ -121,6 +121,8 @@ while True:
         print("Artistas únicos cargados: " + str(cantidad_artistas_unicos))
         print("Pistas de audio únicas cargadas: "+ str(cantidad_pistas_unicas))
         print("------------------------------------------------------------")
+    
+    #---------------------------------------------------------------------------------------------
     #REQ 1
     elif int(inputs[0]) == 3:
         print("")
@@ -141,6 +143,7 @@ while True:
         print('Número de artistas únicos: {}'.format(num_artistas))
         print("------------------------------------------------------------")
 
+    #----------------------------------------------------------------------------------------
     #REQ 2
     elif int(inputs[0])==4:
         print("")
@@ -166,6 +169,7 @@ while True:
             print('-------------------------------------------------------------')
         else:
             print('No hay pistas.')
+    #----------------------------------------------------------------------------------
     #REQ3
     elif int(inputs[0])==5:
         print("")
@@ -192,7 +196,7 @@ while True:
         else:
             print('No hay pistas.')
 
-    
+    #---------------------------------------------------------------------------------------
     #REQ4
     elif int(inputs[0])==6:
         print("")
@@ -226,7 +230,7 @@ while True:
         hora_max = input('Indique la hora máxima que quiera consultar: \n')
         resultado = controller.generoMasEscuchadoEnTiempo(catalog, hora_min, hora_max)
         print("El género más escuchado entre las {} y las {} fue: {}".format(hora_min, hora_max, resultado))
-                    
+
         
 #continuar
         # correr un for sobre los generos (llaves de el mapa catalog['Generos'])
