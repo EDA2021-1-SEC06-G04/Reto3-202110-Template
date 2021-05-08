@@ -108,6 +108,10 @@ def addRep(catalog, reproduccion):
     #req4:
     mp.put(catalog['Reproducciones_totales'], reproduccion['id'], reproduccion)
 
+
+
+#-----------------------------------------------------------------------
+#REQ5
 def addHashtag_rep(catalog, reproduccion):
     rbt = catalog['RepsPor_hora']
     archivo_1 = catalog['Reproducciones_totales']
@@ -209,6 +213,9 @@ def addRep_a_mapaReq1(catalog, caracteristica, rep):
             , 'tempo': rep['tempo'], 'track_id': rep['track_id']}
         lt.addLast(lista_existente, agregar)
 
+
+#------------------------------------------------------------------------------------
+#REQ4
 def carga_req4(catalog, rep, generos_a_correr):
     mapa_generos = catalog['Generos']
     tempo = rep['tempo']

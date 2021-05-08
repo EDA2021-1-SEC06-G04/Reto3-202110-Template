@@ -46,7 +46,6 @@ def initCatalog():
 
 # Funciones para la carga de datos
 def loadData(catalog):
-
     #---------------------------------------------------------------------
     loadSentimentValues(catalog)
     total_reps = loadContextContent(catalog)
@@ -55,10 +54,11 @@ def loadData(catalog):
     return total_reps
 
 
-
 def loadSentimentValues(catalog):
     return None
 
+#-------------------------------------------------------------------------------------------
+#Carga para req 5
 def loadUserTrackHashtag(catalog):
     file = cf.data_dir + usertrackhashtagtimestamp_file
     input_file = csv.DictReader(open(file, encoding='utf-8'))
@@ -74,6 +74,8 @@ def loadUserTrackHashtag(catalog):
         model.addHashtag_rep(catalog, rep_agregar)
     return None
 
+#-------------------------------------------------------------------------------------------
+#Carga archivo principal
 def loadContextContent(catalog):
     file = cf.data_dir + contextContentFeatures_file
     input_file = csv.DictReader(open(file, encoding='utf-8'))
@@ -103,10 +105,10 @@ def loadContextContent(catalog):
 
     return contador_datos
 
-# Funciones de ordenamiento
 
 
 # Funciones de consulta sobre el catálogo
+#--------------------------------------------------------------------------------------------------
 #REQ1
 def caracterizarReproducciones(catalog, caracteristica, valor_min, valor_max):
     #comentarios en model linea 186
@@ -207,6 +209,10 @@ def req4(catalog, lista_generos):
         mp.put(mapa_respuesta, genero, (tamaño_genero, mp.valueSet(artistas_genero)))
     return mapa_respuesta, total_reproducciones_generos
         
+#----------------------------------------------------------------------------------------------
+#REQ5
+def generoMasEscuchadoEnTiempo(catalog, hora_min, hora_max):
+    pass
 
 
 

@@ -92,10 +92,13 @@ Menu principal
 while True:
     printMenu()
     inputs = input('Seleccione una opción para continuar\n')
+
+    #Inicializa el catálogo
     if int(inputs[0]) == 1:
         print("Inicializando catálogo ....")
         catalog = initCatalog()
 
+    #CARGA
     elif int(inputs[0]) == 2:
         print("")
         print("Cargando información del catálogo ....")
@@ -118,7 +121,7 @@ while True:
         print("Artistas únicos cargados: " + str(cantidad_artistas_unicos))
         print("Pistas de audio únicas cargadas: "+ str(cantidad_pistas_unicas))
         print("------------------------------------------------------------")
-
+    #REQ 1
     elif int(inputs[0]) == 3:
         print("")
         caracteristica = input('¿Para cuál característica de contenido desea obtener información?\n')
@@ -134,11 +137,11 @@ while True:
         cantidad_reps = resultado[0]
         num_artistas = resultado[1]
         print("------------------------------------------------------------")
-        print('REPS:{}'.format(cantidad_reps))
-        print('ARTISTAS:{}'.format(num_artistas))
+        print('Cantidad de reproducciones: {}'.format(cantidad_reps))
+        print('Número de artistas únicos: {}'.format(num_artistas))
         print("------------------------------------------------------------")
 
-
+    #REQ 2
     elif int(inputs[0])==4:
         print("")
         minE = float(input('Ingresa el mínimo valor de Energy:\n'))
@@ -160,9 +163,10 @@ while True:
                 d = pista['danceability']
                 e = pista['energy']
                 print('Track ID: {}, Artist ID: {}, Danceability: {}, Energy: {}'.format(tid, aid, d, e))
+            print('-------------------------------------------------------------')
         else:
             print('No hay pistas.')
-        
+    #REQ3
     elif int(inputs[0])==5:
         print("")
         minI = float(input('Ingresa el mínimo valor de Instrumentalness:\n'))
@@ -184,11 +188,12 @@ while True:
                 I = pista['instrumentalness']
                 t = pista['tempo']
                 print('Track ID: {}, Artist ID: {}, Instrumentalness: {}, Tempo: {}'.format(tid, aid, I, t))
+                print('-------------------------------------------------------------')
         else:
             print('No hay pistas.')
 
     
-
+    #REQ4
     elif int(inputs[0])==6:
         print("")
         #agregar genero se hace con la funcion en controller llamada nuevo_genero
@@ -214,19 +219,18 @@ while True:
         info_generos = respuesta_cruda[0]
         printR4(info_generos, total_reproducciones)
 
+    #REQ5
     elif int(inputs[0])==7:
         print("")
         hora_min = input('Indique la hora mínima que quiera consultar: \n')
         hora_max = input('Indique la hora máxima que quiera consultar: \n')
-
-            
+        resultado = controller.generoMasEscuchadoEnTiempo(catalog, hora_min, hora_max)
+        print("El género más escuchado entre las {} y las {} fue: {}".format(hora_min, hora_max, resultado))
+                    
         
 #continuar
         # correr un for sobre los generos (llaves de el mapa catalog['Generos'])
         # para cada uno preguntar si lo quiere incluir o no , el print se puede hacer con format
-
-    elif int(inputs[0])==7:
-        print("")
 
 
 
