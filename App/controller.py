@@ -55,7 +55,11 @@ def loadData(catalog):
 
 
 def loadSentimentValues(catalog):
-    return None
+    file = cf.data_dir + sentimentvalues_file
+    input_file = csv.DictReader(open(file, encoding='utf-8'))
+    for hashtag in input_file:
+        print(hashtag['vader_min'])
+        break
 
 #-------------------------------------------------------------------------------------------
 #Carga para req 5
@@ -72,7 +76,6 @@ def loadUserTrackHashtag(catalog):
         rep_agregar['id'] = (user_id, track_id, fecha)
 
         model.addHashtag_rep(catalog, rep_agregar)
-    return None
 
 #-------------------------------------------------------------------------------------------
 #Carga archivo principal
