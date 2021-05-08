@@ -60,6 +60,18 @@ def loadSentimentValues(catalog):
     return None
 
 def loadUserTrackHashtag(catalog):
+    file = cf.data_dir + usertrackhashtagtimestamp_file
+    input_file = csv.DictReader(open(file, encoding='utf-8'))
+    for hashtag_rep_leido in input_file:
+        rep_agregar = {}
+        track_id = str(hashtag_rep_leido['track_id'])
+        user_id = str(hashtag_rep_leido['user_id'])
+        fecha = datetime.strptime(hashtag_rep_leido['created_at'], '%Y-%m-%d %H:%M:%S')
+        rep_agregar['hora'] = datetime.strptime(hashtag_rep_leido['created_at'].split(' ')[1], '%H:%M:%S')
+        rep_agregar['hashtags'] = hashtag_rep_leido['hashtag']
+        rep_agregar['id'] = (user_id, track_id, fecha)
+
+        model.addHashtag_rep(catalog, rep_agregar)
     return None
 
 def loadContextContent(catalog):

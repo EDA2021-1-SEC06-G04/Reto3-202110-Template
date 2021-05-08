@@ -93,6 +93,8 @@ def newCatalog():
     catalog['Reproducciones_totales'] = mp.newMap(loadfactor=4.0)
     #-----------------------------------------------------------------------------------------------------------
     #-----------------------------------------------------------------------------------------------------------
+    # REQ 5:
+    catalog['RepsPor_hora'] = om.newMap(omaptype='RBT', comparefunction=MAPCompararHoras)
     return catalog
     
 # Funciones para agregar informacion al catalogo
@@ -105,6 +107,62 @@ def addRep(catalog, reproduccion):
     guardar_pista_unica(catalog, reproduccion)
     #req4:
     mp.put(catalog['Reproducciones_totales'], reproduccion['id'], reproduccion)
+
+def addHashtag_rep(catalog, reproduccion):
+    rbt = catalog['RepsPor_hora']
+    archivo_1 = catalog['Reproducciones_totales']
+    hora = reproduccion['hora']
+    #estoe atributo de la rep en realidad es un solo hashtag por ahora
+    hashtag = reproduccion['hashtags']
+    r_id = reproduccion['id']
+    if not om.contains(rbt, hora):
+        mapa_reps = mp.newMap(loadfactor=4.0)
+        lista_hashtags = lt.newList('ARRAY_LIST')
+        lt.addLast(lista_hashtags, hashtag)
+        #ahora si lo volvemos una lista de hashtags
+        reproduccion['hashtags'] = lista_hashtags
+        if mp.contains(archivo_1, r_id):
+            reproduccion['tempo'] = me.getValue(mp.get(archivo_1, r_id))['tempo']
+            mp.put(mapa_reps, r_id, reproduccion)
+# IMPORTANTE:
+# ESTE ELSE SE PUEDE BORRAR
+# todo depende de como interpretamos el archivo 2 y lo que son las reproducciones
+# hacer el else es decir que esto es una rep que no tiene valor tempo porque no aparece en el archivo 1
+# NO hacer el else (no hacer nada(no agregar la 'rep') en else) es decir que esto NO es una rep valida existente porque no aparece en el archivo 1
+        else:
+            reproduccion['tempo'] = -1
+            mp.put(mapa_reps, r_id, reproduccion)
+
+        om.put(rbt, hora, mapa_reps)
+    else:
+        mapa_reps = me.getValue(om.get(rbt, hora))
+        if not mp.contains(mapa_reps, r_id):
+            lista_hashtags = lt.newList('ARRAY_LIST')
+            lt.addLast(lista_hashtags, hashtag)
+            #ahora si lo volvemos una lista de hashtags
+            reproduccion['hashtags'] = lista_hashtags
+
+            if mp.contains(archivo_1, r_id):
+                reproduccion['tempo'] = me.getValue(mp.get(archivo_1, r_id))['tempo']
+                mp.put(mapa_reps, r_id, reproduccion)
+# IMPORTANTE:
+# ESTE ELSE SE PUEDE BORRAR
+# todo depende de como interpretamos el archivo 2 y lo que son las reproducciones
+# hacer el else es decir que esto es una rep que no tiene valor tempo porque no aparece en el archivo 1
+# NO hacer el else (no hacer nada(no agregar la 'rep') en else) es decir que esto NO es una rep valida existente porque no aparece en el archivo 1            
+            else:
+                reproduccion['tempo'] = -1
+                mp.put(mapa_reps, r_id, reproduccion)
+        else:
+            rep = me.getValue(mp.get(mapa_reps, r_id))
+            lt.addLast(rep['hashtags'], reproduccion['hashtags'])
+
+
+
+
+        
+
+
 
 
 def guardar_artista_unico(catalog, rep):
@@ -280,6 +338,16 @@ def PistasRangoTempo(oM_pistas_tempo, minTempo, maxTempo):
 def MAPcompareDecimals(keyname, category):
     keyname = float(keyname)
     cat_entry = float(category)
+    if (keyname == cat_entry):
+        return 0
+    elif (keyname > cat_entry):
+        return 1
+    else:
+        return -1
+
+def MAPCompararHoras(keyname, category):
+    keyname = (keyname)
+    cat_entry = (category)
     if (keyname == cat_entry):
         return 0
     elif (keyname > cat_entry):
