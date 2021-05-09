@@ -30,9 +30,41 @@ from DISClib.ADT import stack as stk
 from DISClib.DataStructures import mapentry as me
 from datetime import datetime
 from datetime import time
+import time
+import tracemalloc
 assert cf
 
+#----------------------------------------------------------------------------------
+#FUNCIONES PARA CALCULAR EL TIEMPO DE EJECUCIÓN Y MEMORIA
+def getTime():
+    """
+    devuelve el instante tiempo de procesamiento en milisegundos
+    """
+    return float(time.perf_counter()*1000)
 
+
+def getMemory():
+    """
+    toma una muestra de la memoria alocada en instante de tiempo
+    """
+    return tracemalloc.take_snapshot()
+
+
+def deltaMemory(start_memory, stop_memory):
+    """
+    calcula la diferencia en memoria alocada del programa entre dos
+    instantes de tiempo y devuelve el resultado en bytes (ej.: 2100.0 B)
+    """
+    memory_diff = stop_memory.compare_to(start_memory, "filename")
+    delta_memory = 0.0
+
+    # suma de las diferencias en uso de memoria
+    for stat in memory_diff:
+        delta_memory = delta_memory + stat.size_diff
+    # de Byte -> kByte
+    delta_memory = delta_memory/1024.0
+    return delta_memory
+#---------------------------------------------------------------------------------------------------
 """
 La vista se encarga de la interacción con el usuario
 Presenta el menu de opciones y por cada seleccion
@@ -104,33 +136,58 @@ while True:
     elif int(inputs[0]) == 2:
         print("")
         print("Cargando información del catálogo ....")
+        #--------------------------------
+        delta_time = -1.0
+        delta_memory = -1.0
+
+        tracemalloc.start()
+        start_time = getTime()
+        start_memory = getMemory()
+        #--------------------------------
         controller.loadData(catalog)
         cantidad_total_reps = controller.loadData(catalog)
         cantidad_artistas_unicos = lt.size(mp.keySet(catalog['Artistas_Unicos']))
         cantidad_pistas_unicas = lt.size((mp.keySet(catalog['Pistas_Unicas'])))
         print("------------------------------------------------------------")
-
-
         print("Registros de eventos de escucha cargados: "+ str(cantidad_total_reps))
         print("Artistas únicos cargados: " + str(cantidad_artistas_unicos))
         print("Pistas de audio únicas cargadas: "+ str(cantidad_pistas_unicas))
         print("------------------------------------------------------------")
+        #--------------------------------
+        stop_memory = getMemory()
+        stop_time = getTime()
+        tracemalloc.stop()
 
+        delta_time = stop_time - start_time
+        delta_memory = deltaMemory(start_memory, stop_memory)
+        #--------------------------------
+        print('Tiempo [ms]: {}'.format(delta_time))
+        print('Memoria [kB]: {}'.format(delta_memory))
         #PRUEBAS:----
-        primer_hashtag = lt.firstElement(mp.keySet(catalog['Hashtags']))
-        print(primer_hashtag)
-        print(me.getValue(mp.get(catalog['Hashtags'], primer_hashtag)))
-        primera_hora = datetime.strptime('3:40:00', '%H:%M:%S')
-        segunda_hora = datetime.strptime('13:40:00', '%H:%M:%S')
-        print(lt.firstElement(om.values(catalog['RepsPor_hora'], primera_hora, segunda_hora)))
+        #primer_hashtag = lt.firstElement(mp.keySet(catalog['Hashtags']))
+        #print(primer_hashtag)
+        #print(me.getValue(mp.get(catalog['Hashtags'], primer_hashtag)))
+        #primera_hora = datetime.strptime('3:40:00', '%H:%M:%S')
+        #segunda_hora = datetime.strptime('13:40:00', '%H:%M:%S')
+        #print(lt.firstElement(om.values(catalog['RepsPor_hora'], primera_hora, segunda_hora)))
 
         #PRUEBAS HASTA AQUI ----
     
+
+
     #---------------------------------------------------------------------------------------------
     #REQ 1
     elif int(inputs[0]) == 3:
         print("")
         caracteristica = input('¿Para cuál característica de contenido desea obtener información?\n')
+        #--------------------------------
+        delta_time = -1.0
+        delta_memory = -1.0
+
+        tracemalloc.start()
+        start_time = getTime()
+        start_memory = getMemory()
+        #--------------------------------
         altura = om.height(catalog['RepsPor_{}'.format(caracteristica)])
         elementos = om.size(catalog['RepsPor_{}'.format(caracteristica)])
         print("------------------------------------------------------------")
@@ -142,10 +199,23 @@ while True:
         resultado = controller.caracterizarReproducciones(catalog, caracteristica, valor_min, valor_max)
         cantidad_reps = resultado[0]
         num_artistas = resultado[1]
+        #--------------------------------
+        stop_memory = getMemory()
+        stop_time = getTime()
+        tracemalloc.stop()
+
+        delta_time = stop_time - start_time
+        delta_memory = deltaMemory(start_memory, stop_memory)
+        #--------------------------------
         print("------------------------------------------------------------")
         print('Cantidad de reproducciones: {}'.format(cantidad_reps))
         print('Número de artistas únicos: {}'.format(num_artistas))
         print("------------------------------------------------------------")
+        print('Tiempo [ms]: {}'.format(delta_time))
+        print('Memoria [kB]: {}'.format(delta_memory))
+        print("------------------------------------------------------------")
+
+
 
     #----------------------------------------------------------------------------------------
     #REQ 2
@@ -155,9 +225,25 @@ while True:
         minD = float(input('Ingresa el mínimo valor de Danceability:\n'))
         maxE = float(input('Ingresa el máximo valor de Energy:\n'))
         maxD = float(input('Ingresa el máximo valor de Danceability:\n'))
+        #--------------------------------
+        delta_time = -1.0
+        delta_memory = -1.0
+
+        tracemalloc.start()
+        start_time = getTime()
+        start_memory = getMemory()
+        #--------------------------------
         resultado = controller.musicaParaFestejar(catalog, minD, maxD, minE, maxE)
         cantidad = resultado[0]
         stack_cinco_tracks = resultado[1]
+        #--------------------------------
+        stop_memory = getMemory()
+        stop_time = getTime()
+        tracemalloc.stop()
+
+        delta_time = stop_time - start_time
+        delta_memory = deltaMemory(start_memory, stop_memory)
+        #--------------------------------
         print('-------------------------------------------------------------')
         print('Buscando pistas con Energy entre {} y {}, y Danceability entre {} y {}:'.format(minE,maxE,minD,maxD))
         print('Se encontraron {} pistas.'.format(cantidad))
@@ -171,8 +257,15 @@ while True:
                 e = pista['energy']
                 print('Track ID: {}, Artist ID: {}, Danceability: {}, Energy: {}'.format(tid, aid, d, e))
             print('-------------------------------------------------------------')
+            print('Tiempo [ms]: {}'.format(delta_time))
+            print('Memoria [kB]: {}'.format(delta_memory))
         else:
             print('No hay pistas.')
+        print("------------------------------------------------------------")
+
+    
+
+
     #----------------------------------------------------------------------------------
     #REQ3
     elif int(inputs[0])==5:
@@ -181,11 +274,27 @@ while True:
         minT = float(input('Ingresa el mínimo valor de Tempo:\n'))
         maxI = float(input('Ingresa el máximo valor de Instrumentallness:\n'))
         maxT = float(input('Ingresa el máximo valor de Tempo:\n'))
+        #--------------------------------
+        delta_time = -1.0
+        delta_memory = -1.0
+
+        tracemalloc.start()
+        start_time = getTime()
+        start_memory = getMemory()
+        #--------------------------------
         resultado = controller.musicaParaEstudiar(catalog, minI, maxI, minT, maxT)
         cantidad_pistas = resultado[0]
         cinco_pistas_supuestamente_aleatorias = resultado[1]
+        #--------------------------------
+        stop_memory = getMemory()
+        stop_time = getTime()
+        tracemalloc.stop()
+
+        delta_time = stop_time - start_time
+        delta_memory = deltaMemory(start_memory, stop_memory)
+        #--------------------------------
         print('-------------------------------------------------------------')
-        print('Buscando pistas con Instrumentalness entre {} y {}, y Tempo entre {} y {}:'.format(minI,maxI,minT,maxT))
+        print('Buscando pistas con Instrumentalness entre {} y {}, y Tempo entre {} y {}...'.format(minI,maxI,minT,maxT))
         print('Se encontraron {} pistas.'.format(cantidad_pistas))
         print('5 pistas :')
         if not stk.isEmpty(cinco_pistas_supuestamente_aleatorias):
@@ -199,6 +308,12 @@ while True:
                 print('-------------------------------------------------------------')
         else:
             print('No hay pistas.')
+        #-------------------------------
+        print('Tiempo [ms]: {}'.format(delta_time))
+        print('Memoria [kB]: {}'.format(delta_memory))
+        print("------------------------------------------------------------")
+
+
 
     #---------------------------------------------------------------------------------------
     #REQ4
@@ -222,10 +337,31 @@ while True:
             incluido = input('Presiona: 1 para consultar este genero o 0 para continuar.\n')
             if incluido == '1':
                 lt.addLast(generos_a_correr, genero_preguntar)
+        #--------------------------------
+        delta_time = -1.0
+        delta_memory = -1.0
+
+        tracemalloc.start()
+        start_time = getTime()
+        start_memory = getMemory()
+        #--------------------------------
         respuesta_cruda = controller.req4(catalog, generos_a_correr)
         total_reproducciones = respuesta_cruda[1]
         info_generos = respuesta_cruda[0]
+        #--------------------------------
+        stop_memory = getMemory()
+        stop_time = getTime()
+        tracemalloc.stop()
+
+        delta_time = stop_time - start_time
+        delta_memory = deltaMemory(start_memory, stop_memory)
+        #--------------------------------
         printR4(info_generos, total_reproducciones)
+        #--------------------------------
+        print('Tiempo [ms]: {}'.format(delta_time))
+        print('Memoria [kB]: {}'.format(delta_memory))
+        print("------------------------------------------------------------")
+
 
     #REQ5
     elif int(inputs[0])==7:
