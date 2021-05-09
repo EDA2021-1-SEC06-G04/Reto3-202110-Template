@@ -49,8 +49,8 @@ def newCatalog():
     #-----------------------------------------------------------------------------------------------------------
     #-----------------------------------------------------------------------------------------------------------
     #Carga:
-    catalog['Artistas_Unicos'] = mp.newMap(loadfactor=4.0)
-    catalog['Pistas_Unicas'] = mp.newMap(loadfactor=4.0)
+    catalog['Artistas_Unicos'] = mp.newMap(maptype='PROBING')
+    catalog['Pistas_Unicas'] = mp.newMap(maptype='PROBING')
     #-----------------------------------------------------------------------------------------------------------
     #-----------------------------------------------------------------------------------------------------------
     #Req1:
@@ -95,6 +95,8 @@ def newCatalog():
     #-----------------------------------------------------------------------------------------------------------
     # REQ 5:
     catalog['RepsPor_hora'] = om.newMap(omaptype='RBT', comparefunction=MAPCompararHoras)
+
+    catalog['Hashtags'] = mp.newMap(maptype='PROBING')
     return catalog
     
 # Funciones para agregar informacion al catalogo
@@ -111,7 +113,7 @@ def addRep(catalog, reproduccion):
 
 
 #-----------------------------------------------------------------------
-#REQ5
+# carga REQ5
 def addHashtag_rep(catalog, reproduccion):
     rbt = catalog['RepsPor_hora']
     archivo_1 = catalog['Reproducciones_totales']
@@ -161,7 +163,11 @@ def addHashtag_rep(catalog, reproduccion):
             rep = me.getValue(mp.get(mapa_reps, r_id))
             lt.addLast(rep['hashtags'], reproduccion['hashtags'])
 
-
+def addHashtag(catalog, hashtag):
+    mapa_Hashtags = catalog['Hashtags']
+    vader = hashtag['vader']
+    hashtag = hashtag['hashtag']
+    mp.put(mapa_Hashtags, hashtag, vader)
 
 
         
@@ -363,5 +369,13 @@ def MAPCompararHoras(keyname, category):
         return 1
     else:
         return -1
-
+'''def CompareStrings(keyname, category):
+    keyname = (keyname)
+    cat_entry = (category)
+    if (keyname == cat_entry):
+        return 0
+    elif (keyname > cat_entry):
+        return 1
+    else:
+        return -1'''
 # Funciones de ordenamiento

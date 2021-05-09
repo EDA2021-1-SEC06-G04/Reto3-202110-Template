@@ -55,7 +55,18 @@ def loadData(catalog):
 
 
 def loadSentimentValues(catalog):
-    return None
+    file = cf.data_dir + sentimentvalues_file
+    input_file = csv.DictReader(open(file, encoding='utf-8'))
+    for hashtag_leido in input_file:
+        hashtag_agregar = {'hashtag': hashtag_leido['hashtag']}
+        if hashtag_leido['vader_avg'] == '':
+            hashtag_agregar['vader'] = -1
+        else:
+            hashtag_agregar['vader'] = float(hashtag_leido['vader_avg'])
+        
+
+        model.addHashtag(catalog, hashtag_agregar)
+        
 
 #-------------------------------------------------------------------------------------------
 #Carga para req 5
