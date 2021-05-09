@@ -55,11 +55,7 @@ def loadData(catalog):
 
 
 def loadSentimentValues(catalog):
-    file = cf.data_dir + sentimentvalues_file
-    input_file = csv.DictReader(open(file, encoding='utf-8'))
-    for hashtag in input_file:
-        print(hashtag['vader_min'])
-        break
+    return None
 
 #-------------------------------------------------------------------------------------------
 #Carga para req 5
@@ -76,6 +72,7 @@ def loadUserTrackHashtag(catalog):
         rep_agregar['id'] = (user_id, track_id, fecha)
 
         model.addHashtag_rep(catalog, rep_agregar)
+    return None
 
 #-------------------------------------------------------------------------------------------
 #Carga archivo principal
@@ -198,7 +195,6 @@ def req4(catalog, lista_generos):
         agregado = model.carga_req4(catalog, reproduccion, lista_generos)
         if agregado:
             total_reproducciones_generos = total_reproducciones_generos + 1
-        
     
     mapa_respuesta = mp.newMap(loadfactor=4.0)
     for genero in lt.iterator(lista_generos):
