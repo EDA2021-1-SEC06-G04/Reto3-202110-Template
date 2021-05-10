@@ -129,6 +129,7 @@ def addHashtag_rep(catalog, reproduccion):
         reproduccion['hashtags'] = lista_hashtags
         if mp.contains(archivo_1, r_id):
             reproduccion['tempo'] = me.getValue(mp.get(archivo_1, r_id))['tempo']
+            reproduccion['track_id'] = me.getValue(mp.get(archivo_1, r_id))['track_id']
             mp.put(mapa_reps, r_id, reproduccion)
 # IMPORTANTE:
 # ESTE ELSE SE PUEDE BORRAR
@@ -150,6 +151,7 @@ def addHashtag_rep(catalog, reproduccion):
 
             if mp.contains(archivo_1, r_id):
                 reproduccion['tempo'] = me.getValue(mp.get(archivo_1, r_id))['tempo']
+                reproduccion['track_id'] = me.getValue(mp.get(archivo_1, r_id))['track_id']
                 mp.put(mapa_reps, r_id, reproduccion)
 # IMPORTANTE:
 # ESTE ELSE SE PUEDE BORRAR
@@ -344,6 +346,116 @@ def PistasRangoTempo(oM_pistas_tempo, minTempo, maxTempo):
 #----------------------------------------------------------------------------------------
 #REQ5
 
+def Reps_genero_en_horario(catalog, lista_mapas_reps, hora_min, hora_max):
+    
+    mapa_generos = catalog['Generos']
+    mapa_contadores = mp.newMap(loadfactor=4.0)
+    reps_totales = 0
+    for genero in lt.iterator(mp.keySet(mapa_generos)):
+        cantidad_reps_genero = 0
+        for mapa_reps in lt.iterator(lista_mapas_reps):
+            for rep in lt.iterator(mp.valueSet(mapa_reps)):
+                tempo_rep = rep['tempo']
+                limites = me.getValue(mp.get(mapa_generos, genero))[0]
+                lim_inf = limites[0]
+                lim_sup = limites[1]
+                if lim_inf <= tempo_rep and tempo_rep <= lim_sup:
+                    cantidad_reps_genero = cantidad_reps_genero + 1
+        mp.put(mapa_contadores, genero,  cantidad_reps_genero)
+    
+    bst_calculo = om.newMap(omaptype='BST', comparefunction=MAPcompareEnteros)
+    for genero in lt.iterator(mp.keySet(mapa_contadores)):
+        cantidad_reps_genero = me.getValue(mp.get(mapa_contadores, genero))
+        om.put(bst_calculo, cantidad_reps_genero, (genero, cantidad_reps_genero))
+    generos_ordenados_por_reps = om.valueSet(bst_calculo)
+    #esto es una lista de tuplas (genero, cantidad_reps_genero) ORDENADA por cantidad_reps_genero
+    return generos_ordenados_por_reps
+
+
+def unique_tracks(catalog, genero, lista_mapas_reps):
+    tracks = mp.newMap(maptype='PROBING')
+    mapa_generos = catalog['Generos']
+    limites = me.getValue(mp.get(mapa_generos, genero))[0]
+    lim_inf = limites[0]
+    lim_sup = limites[1]
+    vaders = catalog['Hashtags']
+    for mapa_reps in lt.iterator(lista_mapas_reps):
+        for rep in lt.iterator(mp.valueSet(mapa_reps)):
+            tempo_rep = rep['tempo']
+            if lim_inf <= tempo_rep and tempo_rep <= lim_sup:
+                track_id = rep['track_id']
+                if not mp.contains(tracks, track_id):
+                    hashtags_track = mp.newMap(loadfactor=4.0)
+                    for hashtag in lt.iterator(rep['hashtags']):
+                        if mp.contains(vaders, hashtag):
+                            vader_hashtag = me.getValue(mp.get(vaders, hashtag))
+                        else:
+                            vader_hashtag = -1
+                        mp.put(hashtags_track, hashtag, vader_hashtag)
+                    mp.put(tracks, track_id, hashtags_track)
+                else:
+                    hashtags_track = me.getValue(mp.get(tracks, track_id))
+                    for hashtag in lt.iterator(rep['hashtags']):
+                        if mp.contains(vaders, hashtag):
+                            vader_hashtag = me.getValue(mp.get(vaders, hashtag))
+                        else:
+                            vader_hashtag = -1
+                        mp.put(hashtags_track, hashtag, vader_hashtag)
+    return tracks
+
+def calculo_vaders_tracks(tracks):
+    for track in lt.iterator(mp.keySet(tracks)):
+        mapa_Hashtags_track = me.getValue(mp.get(tracks, track))
+        vaders_validos = 0
+        vader_track = 0
+        for vader_hashtag in lt.iterator(mp.valueSet(mapa_Hashtags_track)):
+            if not vader_hashtag == -1:
+                vader_track = vader_track + vader_hashtag
+                vaders_validos = vaders_validos + 1
+
+        if vaders_validos == 0:
+            vader_track = None
+        else:
+            vader_track = vader_track/vaders_validos
+        numero_ht_track = mp.size(mapa_Hashtags_track)
+        mp.put(tracks, track, (numero_ht_track, vader_track))
+
+def Ordenar_tracks_por_hashtags(tracks):
+    bst_calculo = om.newMap(omaptype='BST', comparefunction=MAPcompareEnteros)
+    for track in lt.iterator(mp.keySet(tracks)):
+        numero_ht_track, vader_track = me.getValue(mp.get(tracks, track))
+        om.put(bst_calculo, numero_ht_track, (track, vader_track, numero_ht_track))
+    tracks_ordenados = om.valueSet(bst_calculo)
+    return tracks_ordenados
+
+
+
+                
+
+
+
+
+
+
+
+
+
+
+'''hashtags = rep['hashtags']
+            vader_rep = 0
+            vaders_validos = 0
+            for hashtag in lt.iterator(hashtags):
+                vader_hashtag = me.getValue(mp.get(mapa_vaders, hashtag))
+                if not vader_hashtag == -1:
+                    vader_rep = vader_rep + vader_hashtag
+                    vaders_validos = vaders_validos + 1
+
+            vader_rep = vader_rep/vaders_validos'''
+
+
+
+    
+
 
         
 
@@ -360,6 +472,16 @@ def MAPcompareDecimals(keyname, category):
     if (keyname == cat_entry):
         return 0
     elif (keyname > cat_entry):
+        return 1
+    else:
+        return -1
+
+def MAPcompareEnteros(keyname, category):
+    keyname = int(keyname)
+    cat_entry = int(category)
+    if (keyname == cat_entry):
+        return 0
+    elif (keyname < cat_entry):
         return 1
     else:
         return -1
@@ -383,3 +505,14 @@ def MAPCompararHoras(keyname, category):
     else:
         return -1'''
 # Funciones de ordenamiento
+
+
+'''prueba = om.newMap(omaptype='BST', comparefunction=MAPcompareEnteros)
+for i in range(12):
+    om.put(prueba, i, ('h'+str(i), i))
+
+valores = om.valueSet(prueba)
+for valor in lt.iterator(valores):
+    print(valor)
+'''
+
