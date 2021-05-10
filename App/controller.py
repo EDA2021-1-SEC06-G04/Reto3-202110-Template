@@ -224,8 +224,25 @@ def req4(catalog, lista_generos):
 def generoMasEscuchadoEnTiempo(catalog, hora_min, hora_max):
     #hay que ver en que formato entran las horas para ver si es necesario transformarlas antes de empezar a ejecutar
     lista_mapas_reps = om.values(catalog['RepsPor_hora'], hora_min, hora_max)
-    max_genero, cantidad_reps = model.Max_genero_en_horario(catalog, lista_mapas_reps, hora_min, hora_max)
-    unique_tracks = model.unique_tracks(catalog, genero, lista_mapas_reps)
+
+    #esto es una lista de tuplas (genero, cantidad_reps_genero) ORDENADA por cantidad_reps_genero
+    generos_ordenados_por_reps = model.Reps_genero_en_horario(catalog, lista_mapas_reps, hora_min, hora_max)
+
+    #max_genero, cantidad_reps = lt.firstElement(generos_ordenados_por_reps)
+
+    unique_tracks = model.unique_tracks(catalog, max_genero, lista_mapas_reps)
+    model.calculo_vaders_tracks(unique_tracks)
+
+    #aqui quedan ordenados los tracks por numero de hashtags
+    unique_tracks = model.Ordenar_tracks_por_hashtags(unique_tracks)
+
+
+
+    #esto puede borrarse y pasar la informacion de otra forma
+    cantidad_track_max_genero = mp.size(unique_tracks)
+
+    return generos_ordenados_por_reps, unique_tracks, cantidad_track_max_genero
+
     
 
 
