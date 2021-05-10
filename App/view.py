@@ -370,7 +370,7 @@ while True:
         hora_max = input('Indique la hora máxima que quiera consultar: \n')
         resultado = controller.generoMasEscuchadoEnTiempo(catalog, hora_min, hora_max)
         print("El género más escuchado entre las {} y las {} fue: {}".format(hora_min, hora_max, resultado))
-
+        
         
 #continuar
         # correr un for sobre los generos (llaves de el mapa catalog['Generos'])

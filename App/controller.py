@@ -221,8 +221,7 @@ def req4(catalog, lista_generos):
         
 #----------------------------------------------------------------------------------------------
 #REQ5
-def generoMasEscuchadoEnTiempo(catalog, hora_min, hora_max):
-    pass
+
 
 
 
