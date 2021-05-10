@@ -148,15 +148,16 @@ while True:
         cantidad_total_reps = controller.loadData(catalog)
         cantidad_artistas_unicos = lt.size(mp.keySet(catalog['Artistas_Unicos']))
         cantidad_pistas_unicas = lt.size((mp.keySet(catalog['Pistas_Unicas'])))
+        #--------------------------------
+        stop_memory = getMemory()
+        stop_time = getTime()
+        tracemalloc.stop()
         print("------------------------------------------------------------")
         print("Registros de eventos de escucha cargados: "+ str(cantidad_total_reps))
         print("Artistas únicos cargados: " + str(cantidad_artistas_unicos))
         print("Pistas de audio únicas cargadas: "+ str(cantidad_pistas_unicas))
         print("------------------------------------------------------------")
-        #--------------------------------
-        stop_memory = getMemory()
-        stop_time = getTime()
-        tracemalloc.stop()
+        
 
         delta_time = stop_time - start_time
         delta_memory = deltaMemory(start_memory, stop_memory)

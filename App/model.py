@@ -344,6 +344,80 @@ def PistasRangoTempo(oM_pistas_tempo, minTempo, maxTempo):
 #----------------------------------------------------------------------------------------
 #REQ5
 
+def Max_genero_en_horario(catalog, lista_mapas_reps, hora_min, hora_max):
+    
+    mapa_generos = catalog['Generos']
+    mapa_contadores = mp.newMap(loadfactor=4.0)
+    for genero in lt.iterator(mp.keySet(mapa_generos)):
+        cantidad_reps_genero = 0
+        for mapa_reps in lt.iterator(lista_mapas_reps):
+            for rep in lt.iterator(mp.valueSet(mapa_reps)):
+                tempo_rep = rep['tempo']
+                limites = me.getValue(mp.get(mapa_generos, genero))[0]
+                lim_inf = limites[0]
+                lim_sup = limites[1]
+                if lim_inf <= tempo_rep and tempo_rep <= lim_sup:
+                    cantidad_reps_genero = cantidad_reps_genero + 1
+        mp.put(mapa_contadores, genero,  cantidad_reps_genero)
+    
+    rbt_calculo = om.newMap(omaptype='RBT', comparefunction=)
+    for genero in lt.iterator(mp.keySet(mapa_contadores)):
+        cantidad_reps_genero = me.getValue(mp.get(mapa_contadores, genero))
+        om.put(rbt_calculo, cantidad_reps_genero, genero)
+    cantidad_genero_mas_reps = om.maxKey(rbt_calculo)
+    genero_mas_reps = me.getValue(om.get(rbt_calculo, cantidad_genero_mas_reps))
+
+    return genero_mas_reps, cantidad_genero_mas_reps
+
+def unique_tracks(catalog, genero, lista_mapas_reps):
+    tracks = mp.newMap(maptype='PROBING')
+    limites = me.getValue(mp.get(mapa_generos, genero))[0]
+    lim_inf = limites[0]
+    lim_sup = limites[1]
+    vaders = catalog['Hashtags']
+    for mapa_reps in lt.iterator(lista_mapas_reps):
+        for rep in lt.iterator(mp.valueSet(mapa_reps)):
+            tempo_rep = rep['tempo']
+            if lim_inf <= tempo_rep and tempo_rep <= lim_sup:
+                track_id = rep['track_id']
+                if not mp.contains(tracks, track_id):
+                    hashtags_track = mp.newMap(loadfactor=4.0)
+                    for hashtag in lt.iterator(rep['hashtags']):
+                        vader_hashtag = me.getValue(mp.get(vaders, hashtag))
+                        mp.put(hashtags_track, hashtag, vader_hashtag)
+                    mp.put(tracks, track_id, hashtags_track)
+                else:
+                    hashtags_track = me.getValue(mp.get(tracks, track_id))
+                    for hashtag in lt.iterator(rep['hashtags']):
+                        vader_hashtag = me.getValue(mp.get(vaders, hashtag))
+                        mp.put(hashtags_track, hashtag, vader_hashtag)
+    return tracks
+                
+
+
+
+
+
+
+
+
+
+
+'''hashtags = rep['hashtags']
+            vader_rep = 0
+            vaders_validos = 0
+            for hashtag in lt.iterator(hashtags):
+                vader_hashtag = me.getValue(mp.get(mapa_vaders, hashtag))
+                if not vader_hashtag == -1:
+                    vader_rep = vader_rep + vader_hashtag
+                    vaders_validos = vaders_validos + 1
+
+            vader_rep = vader_rep/vaders_validos'''
+
+
+
+    
+
 
 
 #-----------------------------------------------------------------------------------------

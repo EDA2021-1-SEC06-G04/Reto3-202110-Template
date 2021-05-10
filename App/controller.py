@@ -222,20 +222,13 @@ def req4(catalog, lista_generos):
 #----------------------------------------------------------------------------------------------
 #REQ5
 def generoMasEscuchadoEnTiempo(catalog, hora_min, hora_max):
-    pass
-
-
-
-    
-
-
-    
-
-    #falta calcular lo que piden: tal vez algunas cuentas de cantidades deben hacerse dentro de model.carga_req4
-    #como por el ejemplo un contador para la cantidad total de reproducciones
-    #la cantidad de cada genero no es necesaria hacerla ahi adentro porque al final se le puede sacar size a la lista del genero
+    #hay que ver en que formato entran las horas para ver si es necesario transformarlas antes de empezar a ejecutar
+    lista_mapas_reps = om.values(catalog['RepsPor_hora'], hora_min, hora_max)
+    max_genero, cantidad_reps = model.Max_genero_en_horario(catalog, lista_mapas_reps, hora_min, hora_max)
+    unique_tracks = model.unique_tracks(catalog, genero, lista_mapas_reps)
     
 
 
 
+    
 
