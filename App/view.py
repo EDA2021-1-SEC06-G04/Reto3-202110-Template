@@ -367,10 +367,35 @@ while True:
     #REQ5
     elif int(inputs[0])==7:
         print("")
-        hora_min = input('Indique la hora mínima que quiera consultar: \n')
-        hora_max = input('Indique la hora máxima que quiera consultar: \n')
-        resultado = controller.generoMasEscuchadoEnTiempo(catalog, hora_min, hora_max)
-        print("El género más escuchado entre las {} y las {} fue: {}".format(hora_min, hora_max, resultado))
+        print('Indique la hora mínima que quiera consultar: \n')
+        hora_min = input('PORFAVOR USA EL FORMATO h:m:s\n')
+        print('Indique la hora máxima que quiera consultar: \n')
+        hora_max = input('PORFAVOR USA EL FORMATO h:m:s\n')
+        generos_ordenPorReps, tracks, num_tracks_maxGenero = controller.generoMasEscuchadoEnTiempo(catalog, hora_min, hora_max)
+        print('---------------------Generos ordenados por reproducciones------------------------')
+        contador = 0
+        for tupla in lt.iterator(generos_ordenPorReps):
+            genero = tupla[0]
+            num_reps_genero = tupla[1]
+            print('Top {} genero: {} , {} reproducciones.'.format(contador+1, genero, num_reps_genero))
+            contador = contador + 1
+            if contador == 10:
+                break
+        print("------------------------------------------------------------ \n")
+        maxgenero, max_reps = lt.firstElement(generos_ordenPorReps)
+        print("El género más escuchado entre las {} y las {} fue: {} con {} reproducciones.".format(hora_min, hora_max, maxgenero, max_reps))
+
+        print('--------------------{} Análisis Sentimental-----------------------'.format(maxgenero))
+        print('{} tiene {} tracks distintos.'.format(maxgenero, num_tracks_maxGenero))
+        print('Las top 10 tracks del genero son:')
+        contador = 0
+        for tupla in lt.iterator(tracks):
+            track, vader_track, numero_ht_track = tupla
+            print('Top {} track: {}, {} hashtags, vader promedio = {} '.format(contador+1, track, numero_ht_track, vader_track))
+            contador = contador + 1
+            if contador == 10:
+                break
+
 
         
 #continuar

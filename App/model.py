@@ -129,6 +129,7 @@ def addHashtag_rep(catalog, reproduccion):
         reproduccion['hashtags'] = lista_hashtags
         if mp.contains(archivo_1, r_id):
             reproduccion['tempo'] = me.getValue(mp.get(archivo_1, r_id))['tempo']
+            reproduccion['track_id'] = me.getValue(mp.get(archivo_1, r_id))['track_id']
             mp.put(mapa_reps, r_id, reproduccion)
 # IMPORTANTE:
 # ESTE ELSE SE PUEDE BORRAR
@@ -150,6 +151,7 @@ def addHashtag_rep(catalog, reproduccion):
 
             if mp.contains(archivo_1, r_id):
                 reproduccion['tempo'] = me.getValue(mp.get(archivo_1, r_id))['tempo']
+                reproduccion['track_id'] = me.getValue(mp.get(archivo_1, r_id))['track_id']
                 mp.put(mapa_reps, r_id, reproduccion)
 # IMPORTANTE:
 # ESTE ELSE SE PUEDE BORRAR
@@ -372,6 +374,7 @@ def Reps_genero_en_horario(catalog, lista_mapas_reps, hora_min, hora_max):
 
 def unique_tracks(catalog, genero, lista_mapas_reps):
     tracks = mp.newMap(maptype='PROBING')
+    mapa_generos = catalog['Generos']
     limites = me.getValue(mp.get(mapa_generos, genero))[0]
     lim_inf = limites[0]
     lim_sup = limites[1]
@@ -384,13 +387,19 @@ def unique_tracks(catalog, genero, lista_mapas_reps):
                 if not mp.contains(tracks, track_id):
                     hashtags_track = mp.newMap(loadfactor=4.0)
                     for hashtag in lt.iterator(rep['hashtags']):
-                        vader_hashtag = me.getValue(mp.get(vaders, hashtag))
+                        if mp.contains(vaders, hashtag):
+                            vader_hashtag = me.getValue(mp.get(vaders, hashtag))
+                        else:
+                            vader_hashtag = -1
                         mp.put(hashtags_track, hashtag, vader_hashtag)
                     mp.put(tracks, track_id, hashtags_track)
                 else:
                     hashtags_track = me.getValue(mp.get(tracks, track_id))
                     for hashtag in lt.iterator(rep['hashtags']):
-                        vader_hashtag = me.getValue(mp.get(vaders, hashtag))
+                        if mp.contains(vaders, hashtag):
+                            vader_hashtag = me.getValue(mp.get(vaders, hashtag))
+                        else:
+                            vader_hashtag = -1
                         mp.put(hashtags_track, hashtag, vader_hashtag)
     return tracks
 
@@ -468,7 +477,7 @@ def MAPcompareEnteros(keyname, category):
     cat_entry = int(category)
     if (keyname == cat_entry):
         return 0
-    elif (keyname > cat_entry):
+    elif (keyname < cat_entry):
         return 1
     else:
         return -1
@@ -494,15 +503,12 @@ def MAPCompararHoras(keyname, category):
 # Funciones de ordenamiento
 
 
-prueba = om.newMap(omaptype='BST', comparefunction=MAPcompareEnteros)
+'''prueba = om.newMap(omaptype='BST', comparefunction=MAPcompareEnteros)
 for i in range(12):
     om.put(prueba, i, ('h'+str(i), i))
 
 valores = om.valueSet(prueba)
 for valor in lt.iterator(valores):
     print(valor)
+'''
 
-
-
-#se puede retornar ordenado con om.values
-#cambiar esoooooo!!!!!!!!!!!!!!
