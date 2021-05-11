@@ -371,7 +371,23 @@ while True:
         hora_min = input('PORFAVOR USA EL FORMATO h:m:s\n')
         print('Indique la hora máxima que quiera consultar: \n')
         hora_max = input('PORFAVOR USA EL FORMATO h:m:s\n')
+        #--------------------------------
+        delta_time = -1.0
+        delta_memory = -1.0
+
+        tracemalloc.start()
+        start_time = getTime()
+        start_memory = getMemory()
+        #--------------------------------
         generos_ordenPorReps, tracks, num_tracks_maxGenero = controller.generoMasEscuchadoEnTiempo(catalog, hora_min, hora_max)
+        #--------------------------------
+        stop_memory = getMemory()
+        stop_time = getTime()
+        tracemalloc.stop()
+
+        delta_time = stop_time - start_time
+        delta_memory = deltaMemory(start_memory, stop_memory)
+        #--------------------------------
         print('---------------------Generos ordenados por reproducciones------------------------')
         contador = 0
         for tupla in lt.iterator(generos_ordenPorReps):
@@ -390,11 +406,16 @@ while True:
         print('Las top 10 tracks del genero son:')
         contador = 0
         for tupla in lt.iterator(tracks):
-            track, vader_track, numero_ht_track = tupla
+            numero_ht_track, vader_track, track = tupla
             print('Top {} track: {}, {} hashtags, vader promedio = {} '.format(contador+1, track, numero_ht_track, vader_track))
             contador = contador + 1
             if contador == 10:
                 break
+
+        #--------------------------------
+        print('Tiempo [ms]: {}'.format(delta_time))
+        print('Memoria [kB]: {}'.format(delta_memory))
+        print("------------------------------------------------------------")
 
 
         

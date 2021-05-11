@@ -58,7 +58,7 @@ def loadSentimentValues(catalog):
     file = cf.data_dir + sentimentvalues_file
     input_file = csv.DictReader(open(file, encoding='utf-8'))
     for hashtag_leido in input_file:
-        hashtag_agregar = {'hashtag': hashtag_leido['hashtag']}
+        hashtag_agregar = {'hashtag': hashtag_leido['hashtag'].lower()}
         if hashtag_leido['vader_avg'] == '':
             hashtag_agregar['vader'] = -1
         else:
@@ -79,7 +79,7 @@ def loadUserTrackHashtag(catalog):
         user_id = str(hashtag_rep_leido['user_id'])
         fecha = datetime.strptime(hashtag_rep_leido['created_at'], '%Y-%m-%d %H:%M:%S')
         rep_agregar['hora'] = datetime.strptime(hashtag_rep_leido['created_at'].split(' ')[1], '%H:%M:%S')
-        rep_agregar['hashtags'] = hashtag_rep_leido['hashtag']
+        rep_agregar['hashtags'] = hashtag_rep_leido['hashtag'].lower()
         rep_agregar['id'] = (user_id, track_id, fecha)
 
         model.addHashtag_rep(catalog, rep_agregar)
@@ -230,20 +230,22 @@ def generoMasEscuchadoEnTiempo(catalog, hora_min, hora_max):
     lista_mapas_reps = om.values(catalog['RepsPor_hora'], hora_min, hora_max)
 
     #esto es una lista de tuplas (genero, cantidad_reps_genero) ORDENADA por cantidad_reps_genero
-    generos_ordenados_por_reps = model.Reps_genero_en_horario(catalog, lista_mapas_reps, hora_min, hora_max)
+    generos_ordenados_por_reps = model.Reps_genero_en_horario(catalog, lista_mapas_reps)
 
     max_genero = lt.firstElement(generos_ordenados_por_reps)[0]
-
+    
     unique_tracks = model.unique_tracks(catalog, max_genero, lista_mapas_reps)
     model.calculo_vaders_tracks(unique_tracks)
-
+    unique_tracks = mp.valueSet(unique_tracks)
     #aqui quedan ordenados los tracks por numero de hashtags
-    unique_tracks = model.Ordenar_tracks_por_hashtags(unique_tracks)
+    model.Ordenar_tracks_por_hashtags(unique_tracks)
 
-
+    '''for track in lt.iterator(unique_tracks):
+        if track[0]>4:
+            print(track[0])'''
 
     #esto puede borrarse y pasar la informacion de otra forma
-    cantidad_track_max_genero = mp.size(unique_tracks)
+    cantidad_track_max_genero = lt.size(unique_tracks)
 
     return generos_ordenados_por_reps, unique_tracks, cantidad_track_max_genero
 

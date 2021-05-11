@@ -31,6 +31,7 @@ from DISClib.ADT import map as mp
 from DISClib.ADT import orderedmap as om
 from DISClib.DataStructures import mapentry as me
 from DISClib.Algorithms.Sorting import shellsort as sa
+from DISClib.Algorithms.Sorting import mergesort
 assert cf
 
 """
@@ -346,7 +347,7 @@ def PistasRangoTempo(oM_pistas_tempo, minTempo, maxTempo):
 #----------------------------------------------------------------------------------------
 #REQ5
 
-def Reps_genero_en_horario(catalog, lista_mapas_reps, hora_min, hora_max):
+def Reps_genero_en_horario(catalog, lista_mapas_reps):
     
     mapa_generos = catalog['Generos']
     mapa_contadores = mp.newMap(loadfactor=4.0)
@@ -379,11 +380,15 @@ def unique_tracks(catalog, genero, lista_mapas_reps):
     lim_inf = limites[0]
     lim_sup = limites[1]
     vaders = catalog['Hashtags']
+    #contador_prueba = 0
     for mapa_reps in lt.iterator(lista_mapas_reps):
         for rep in lt.iterator(mp.valueSet(mapa_reps)):
             tempo_rep = rep['tempo']
             if lim_inf <= tempo_rep and tempo_rep <= lim_sup:
                 track_id = rep['track_id']
+                
+       #         print('track_id:')
+       #         print(track_id)
                 if not mp.contains(tracks, track_id):
                     hashtags_track = mp.newMap(loadfactor=4.0)
                     for hashtag in lt.iterator(rep['hashtags']):
@@ -393,6 +398,9 @@ def unique_tracks(catalog, genero, lista_mapas_reps):
                             vader_hashtag = -1
                         mp.put(hashtags_track, hashtag, vader_hashtag)
                     mp.put(tracks, track_id, hashtags_track)
+                    #contador_prueba = contador_prueba + 1
+                    
+                    
                 else:
                     hashtags_track = me.getValue(mp.get(tracks, track_id))
                     for hashtag in lt.iterator(rep['hashtags']):
@@ -401,11 +409,15 @@ def unique_tracks(catalog, genero, lista_mapas_reps):
                         else:
                             vader_hashtag = -1
                         mp.put(hashtags_track, hashtag, vader_hashtag)
+                    
+    #print(contador_prueba)
     return tracks
 
 def calculo_vaders_tracks(tracks):
     for track in lt.iterator(mp.keySet(tracks)):
         mapa_Hashtags_track = me.getValue(mp.get(tracks, track))
+#        if not mp.size(mapa_Hashtags_track) == 1:
+#            print(mp.size(mapa_Hashtags_track))
         vaders_validos = 0
         vader_track = 0
         for vader_hashtag in lt.iterator(mp.valueSet(mapa_Hashtags_track)):
@@ -418,15 +430,12 @@ def calculo_vaders_tracks(tracks):
         else:
             vader_track = vader_track/vaders_validos
         numero_ht_track = mp.size(mapa_Hashtags_track)
-        mp.put(tracks, track, (numero_ht_track, vader_track))
+#        if not mp.size(mapa_Hashtags_track) == 1:
+#            print(mp.size(mapa_Hashtags_track))
+        mp.put(tracks, track, (numero_ht_track, vader_track, track))
 
 def Ordenar_tracks_por_hashtags(tracks):
-    bst_calculo = om.newMap(omaptype='BST', comparefunction=MAPcompareEnteros)
-    for track in lt.iterator(mp.keySet(tracks)):
-        numero_ht_track, vader_track = me.getValue(mp.get(tracks, track))
-        om.put(bst_calculo, numero_ht_track, (track, vader_track, numero_ht_track))
-    tracks_ordenados = om.valueSet(bst_calculo)
-    return tracks_ordenados
+    mergesort.sort(tracks, compareNumHT)
 
 
 
@@ -478,6 +487,20 @@ def MAPcompareEnteros(keyname, category):
     if (keyname == cat_entry):
         return 0
     elif (keyname < cat_entry):
+        return 1
+    else:
+        return -1
+
+def compareNumHT(track1, track2):
+    return track1[0] < track2[0]
+
+
+def compareNumHT2(keyname, category):
+    keyname = (keyname[0])
+    cat_entry = (category[0])
+    if (keyname == cat_entry):
+        return 0
+    elif (keyname > cat_entry):
         return 1
     else:
         return -1
